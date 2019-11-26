@@ -31,11 +31,29 @@ function Step-Download($XmlNode, $RunFolder)
     $WebClient = New-Object System.Net.WebClient
     "Downloading:$($XmlNode.InnerText)" | Out-Host 
     $WebClient.DownloadFile($XmlNode.InnerText, $Output)
+    if (Test-Path -Path $Output) {
+        Log -LogLevel Error -Line "Failed to download $($XmlNode.InnerText) to $Output"
+        return $False
+    }
+    return $True
 }
 
 function Step-CreateDir($XmlNode, $RunFolder)
 {
-
+    $FolderName = $XmlNode.InnerText
+    if (Test-Path -Path $FolderName) {
+       if ((Get-Item $FolderName) -is [System.IO.DirectoryInfo]) {
+           return $true
+       }
+       Log -LogLevel Error -Line "$FolderName already exists and is not a folder"
+       return $False
+    }
+    New-Item -Path $Folder -ItemType Directory | Out-Null
+    if (Test-Path -Path $FolderName) {
+        Log -LogLevel Error -Line "Failed to create $FolderName"
+        return $False
+    }
+    return $True
 }
 
 function Step-CopyFile($XmlNode, $RunFolder)
@@ -78,7 +96,8 @@ function Install-Component($ComponentName)
 
     foreach ($StepNode in $PackageNode.ChildNodes) {
         switch ($StepNode.LocalName) {
-            "download" { Step-Download -XmlNode $StepNode -RunFolder $RunFolder ; break}
+            "download" { if (!(Step-Download -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "create_dir" { if (!(Step-CreateDir -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             default {Log -LogLevel Warn -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
