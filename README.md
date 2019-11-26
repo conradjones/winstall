@@ -10,11 +10,11 @@ Components are configured via XML files
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
   <download>http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20190524.exe</download>
-    <command>
-	     <commandline>msys2-x86_64-20190524.exe</commandline>
-	     <args>--platform minimal --script msys2.qs</args>
-    </command>
-    <path>C:\msys64\usr\bin</path>
+  <command>
+  	<commandline>msys2-x86_64-20190524.exe</commandline>
+	<args>--platform minimal --script msys2.qs</args>
+  </command>
+  <path>C:\msys64\usr\bin</path>
 </package>
 ```
 
