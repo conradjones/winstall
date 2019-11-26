@@ -3,7 +3,7 @@
     <download>https://www.python.org/ftp/python/3.7.5/python-3.7.5-amd64.exe</download>
     <command>
 	    <commandline>python-3.7.5-amd64.exe</commandline>
-	    <args>/passive /quiet InstallAllUsers=1 TargetDir=C:\Python37</args>
+	    <args>/passive /quiet InstallAllUsers=1 TargetDir=C:\bin\Python37</args>
 	</command>
-    <path>C:\Python37</path>
+    <path>C:\bin\Python37</path>
 </package>
