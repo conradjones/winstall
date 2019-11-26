@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <download>https://github.com/bazelbuild/bazel/releases/download/1.1.0/bazel-1.1.0-windows-x86_64.exe</download>
+    <create_dir>c:\bin</create_dir>
+    <copy_file>
+    	<source>bazel-1.1.0-windows-x86_64.exe</source>
+    	<dest>c:\bin\bazel.exe</dest>
+    </copy_file>
+    <path>c:\bin</path>
+</package>
