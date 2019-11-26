@@ -1,4 +1,4 @@
-# wininstall
+# WinInstall
  Scripts and configs for windows CI machines
 
 
