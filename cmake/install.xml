@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <detect>
+        <file>
+            <path>C:\Program Files\CMake\bin\cmake.exe</path>
+            <version>3.16.0.0</version>
+        </file>
+    </detect>
     <steps>
         <download>https://github.com/Kitware/CMake/releases/download/v3.16.0/cmake-3.16.0-win64-x64.msi</download>
         <command>
