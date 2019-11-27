@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <detect>
+        <file>
+            <path>C:\msys64\msys2.exe</path>
+            <version>0.3.0.0</version>
+        </file>
+        <file>
+            <path>C:\msys64\usr\bin\bash.exe</path>
+        </file>
+    </detect>
     <steps>
         <download>http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20190524.exe</download>
         <command>
