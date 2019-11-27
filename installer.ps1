@@ -233,7 +233,7 @@ function Install-Component($ComponentName)
     }
 
     if ($null -ne $DetectionNode ) {
-        if (Is-Detected -XmlNode $DetectionNode -RunFolder $RunFolder) {
+        if (Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder) {
             Log -LogLevel Error  -Line "Package is not detected after install $ComponentName"
             return $False
         }
