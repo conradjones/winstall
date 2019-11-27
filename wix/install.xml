@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <download>https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311.exe</download>
+        <command>
+            <commandline>wix311.exe</commandline>
+            <args>
+                <arg>-q</arg>
+                <arg>-norestart</arg>
+            </args>
+        </command>
+    </steps>
+</package>
+
+
+
+
