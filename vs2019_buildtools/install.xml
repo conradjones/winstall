@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <detect>
+        <file>
+            <path>C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.23.28105\bin\Hostx64\x64\cl.exe</path>
+            <version>14.23.28107.0</version>
+        </file>
+    </detect>
     <steps>
         <download>https://download.visualstudio.microsoft.com/download/pr/e58a94db-93b0-4173-b26b-fc5f5c1bef7a/00720058e3b219a6260c17f5dc0042821298c764004bef0d968ab62bb3c9ce76/vs_BuildTools.exe</download>
         <command>
