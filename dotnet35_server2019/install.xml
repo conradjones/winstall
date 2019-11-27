@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <detect>
+        <powershell>
+            <scriptblock>(Get-WindowsOptionalFeature -Online -FeatureName NetFx3ServerFeatures).State</scriptblock>
+            <expected>Enabled</expected>
+        </powershell>
+        <powershell>
+            <scriptblock>(Get-WindowsOptionalFeature -Online -FeatureName NetFx3).State</scriptblock>
+            <expected>Enabled</expected>
+        </powershell>
+    </detect>
     <steps>
         <command>
             <commandline>dism.exe</commandline>
