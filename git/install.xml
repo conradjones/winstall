@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <detect>
+        <file>
+            <path>C:\bin\git\bin\git.exe</path>
+            <version>2.24.0.2</version>
+        </file>
+    </detect>
     <steps>
         <download>https://github.com/git-for-windows/git/releases/download/v2.24.0.windows.2/Git-2.24.0.2-64-bit.exe</download>
         <command>
