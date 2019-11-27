@@ -117,6 +117,23 @@ function Step-Command($XmlNode, $RunFolder)
     return $True
 }
 
+function Step-RegSet($XmlNode, $RunFolder)
+{
+    $RegKey = $XmlNode.key
+    $RegValue = $XmlNode.value
+    $RegValueName = $XmlNode.value_name
+
+    switch ($XmlNode.value_type) {
+        "REG_DWORD" { $Type = [Microsoft.Win32.RegistryValueKind]::DWord}
+        "REG_SZ"    { $Type = [Microsoft.Win32.RegistryValueKind]::String}
+        default     { return $false }
+    }
+
+    [Microsoft.Win32.Registry]::SetValue($RegKey,$RegValueName,$RegValue,$Type)
+
+    return $True
+}
+
 function Detect-File($DetectionNode, $RunFolder)
 {
     if (!(Test-Path -Path $DetectionNode.path)) {
@@ -178,6 +195,7 @@ function Install-Component($ComponentName)
             "copy_file"  { if (!(Step-CopyFile  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             "path"       { if (!(Step-Path      -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             "command"    { if (!(Step-Command   -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "reg_set"    { if (!(Step-RegSet    -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             default {Log -LogLevel Warn -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }

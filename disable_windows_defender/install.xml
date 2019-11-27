@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <reg_set>
+            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender</key>
+            <value_name>DisableAntiSpyware</value_name>
+            <value_type>REG_DWORD</value_type>
+            <value>1</value>
+        </reg_set>
+        <reg_set>
+            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender</key>
+            <value_name>ServiceKeepAlive</value_name>
+            <value_type>REG_DWORD</value_type>
+            <value>0</value>
+        </reg_set>
+        <reg_set>
+            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection</key>
+            <value_name>DisableBehaviorMonitoring</value_name>
+            <value_type>REG_DWORD</value_type>
+            <value>1</value>
+        </reg_set>
+        <reg_set>
+            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection</key>
+            <value_name>DisableRealtimeMonitoring</value_name>
+            <value_type>REG_DWORD</value_type>
+            <value>1</value>
+        </reg_set>
+        <command>
+            <commandline>gpupdate.exe</commandline>
+            <args>
+                <arg>/force</arg>
+            </args>
+        </command>
+    </steps>
+</package>
+
+
+
+
