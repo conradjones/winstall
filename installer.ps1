@@ -137,16 +137,20 @@ function Step-RegSet($XmlNode, $RunFolder)
 function Confirm-FileDetected($DetectionNode, $RunFolder)
 {
     if (!(Test-Path -Path $DetectionNode.path)) {
+        Log -LogLevel Debug -Line "(Detection):$($DetectionNode.path) not found"
         return $False
     }
 
     if (!((Get-Item $DetectionNode.path) -is [System.IO.FileInfo])) {
+        Log -LogLevel Debug -Line "(Detection):$($DetectionNode.path) found but is not a file"
         return $False
     }
 
-    $version = $DetectionNode.version
-    if ($null -ne $version) {
-        if ((Get-Command $DetectionNode.path).Version -ne [version]$version) {
+    $expectedVersion = $DetectionNode.version
+    if ($null -ne $expectedVersion) {
+        $foundVersion = (Get-Command $DetectionNode.path).Version
+        if ($foundVersion -ne [version]$expectedVersion) {
+            Log -LogLevel Debug -Line "(Detection):$($DetectionNode.path) found but version is:$foundVersion (expected:$expectedVersion)"
             return $False
         }
     }
@@ -233,7 +237,7 @@ function Install-Component($ComponentName)
     }
 
     if ($null -ne $DetectionNode ) {
-        if (Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder) {
+        if (!(Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder)) {
             Log -LogLevel Error  -Line "Package is not detected after install $ComponentName"
             return $False
         }
