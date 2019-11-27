@@ -104,7 +104,7 @@ function Step-Path($XmlNode, $RunFolder)
 
 function Step-Command($XmlNode, $RunFolder)
 {
-    pushd $RunFolder
+    Push-Location -Path $RunFolder
     $command = $XmlNode.commandLine
     $args = @()
     foreach ($ArgNode in $XmlNode.args.arg) {
@@ -113,7 +113,7 @@ function Step-Command($XmlNode, $RunFolder)
     $argString = $args -join " "
     Log -LogLevel Info -Line "Executing:$command $argString"
     Start-Process -FilePath $command -ArgumentList $args -Wait
-    popd
+    Pop-Location
     return $True
 }
 
@@ -134,19 +134,31 @@ function Step-RegSet($XmlNode, $RunFolder)
     return $True
 }
 
-function Detect-File($DetectionNode, $RunFolder)
+function Confirm-FileDetected($DetectionNode, $RunFolder)
 {
     if (!(Test-Path -Path $DetectionNode.path)) {
         return $False
     }
-    return ((Get-Item $DetectionNode.path) -is [System.IO.FileInfo])
+
+    if (!((Get-Item $DetectionNode.path) -is [System.IO.FileInfo])) {
+        return $False
+    }
+
+    $version = $DetectionNode.version
+    if ($null -ne $version) {
+        if ((Get-Command $DetectionNode.path).Version -ne [version]$version) {
+            return $False
+        }
+    }
+
+    return $True
 }
 
-function Is-Detected($XmlNode, $RunFolder)
+function Confirm-IsDetected($XmlNode, $RunFolder)
 {
     foreach ($DetectionNode in $XmlNode.ChildNodes) {
         switch ($DetectionNode.LocalName) {
-            "file"   { if (!(Detect-File  -DetectionNode $DetectionNode -RunFolder $RunFolder)) {return $false} ; break}
+            "file"   { if (!(Confirm-FileDetected  -DetectionNode $DetectionNode -RunFolder $RunFolder)) {return $false} ; break}
             default  {Log -LogLevel Warn -Line "Unknown detection step in XML $($DetectionNode.LocalName)"; break}
         }
     }
@@ -182,7 +194,7 @@ function Install-Component($ComponentName)
 
     $DetectionNode = $PackageNode.detect
     if ($null -ne $DetectionNode ) {
-        if (Is-Detected -XmlNode $DetectionNode -RunFolder $RunFolder) {
+        if (Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder) {
             Log -LogLevel Info  -Line "Package is detected $ComponentName"
             return $True
         }
