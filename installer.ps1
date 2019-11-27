@@ -31,7 +31,7 @@ function Step-Download($XmlNode, $RunFolder)
     $WebClient = New-Object System.Net.WebClient
     "Downloading:$($XmlNode.InnerText)" | Out-Host 
     $WebClient.DownloadFile($XmlNode.InnerText, $Output)
-    if (Test-Path -Path $Output) {
+    if (!(Test-Path -Path $Output)) {
         Log -LogLevel Error -Line "Failed to download $($XmlNode.InnerText) to $Output"
         return $False
     }
@@ -58,7 +58,26 @@ function Step-CreateDir($XmlNode, $RunFolder)
 
 function Step-CopyFile($XmlNode, $RunFolder)
 {
+    $SourceNode = $XmlNode.source
+    if ($Null -eq $SourceNode) {
+       Log -LogLevel Error -Line "source node is missing from copy_file step"
+       return $False
+    }
 
+    $DestNode = $XmlNode.dest
+    if ($Null -eq $DestNode) {
+       Log -LogLevel Error -Line "dest node is missing from copy_file step"
+       return $False
+    }
+
+    $SourcePath = Join-Path -Path $RunFolder -ChildPath $SourceNode
+    $DestPath = $DestNode 
+    Copy-Item -Path $SourcePath -Destination $DestPath
+    if (!(Test-Path -Path $DestPath)) {
+        Log -LogLevel Error -Line "Failed to copy $SourcePath to $DestPath"
+        return $False
+    }
+    return $True
 }
 
 function Step-Path($XmlNode, $RunFolder)
@@ -97,7 +116,8 @@ function Install-Component($ComponentName)
     foreach ($StepNode in $PackageNode.ChildNodes) {
         switch ($StepNode.LocalName) {
             "download" { if (!(Step-Download -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "create_dir" { if (!(Step-CreateDir -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            #"create_dir" { if (!(Step-CreateDir -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "copy_file" { if (!(Step-CopyFile -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             default {Log -LogLevel Warn -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
