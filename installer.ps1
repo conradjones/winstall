@@ -154,11 +154,31 @@ function Confirm-FileDetected($DetectionNode, $RunFolder)
     return $True
 }
 
+function Confirm-PowershellDetected($DetectionNode, $RunFolder)
+{
+    $scriptBlock = $DetectionNode.scriptblock
+    if ($null -eq $scriptBlock) {
+        Log -LogLevel Info -Line "Powershell detection node missing scriptblock"
+        exit 1
+    }
+
+    $expected = $DetectionNode.expected
+    if ($null -eq $expected) {
+        Log -LogLevel Info -Line "Powershell detection node missing expected"
+        exit 1
+    }
+
+    $Result = Invoke-Expression -Command $scriptBlock
+
+    return ($Result -eq $expected)
+}
+
 function Confirm-IsDetected($XmlNode, $RunFolder)
 {
     foreach ($DetectionNode in $XmlNode.ChildNodes) {
         switch ($DetectionNode.LocalName) {
-            "file"   { if (!(Confirm-FileDetected  -DetectionNode $DetectionNode -RunFolder $RunFolder)) {return $false} ; break}
+            "file"          { if (!(Confirm-FileDetected        -DetectionNode $DetectionNode -RunFolder $RunFolder)) {return $false} ; break}
+            "powershell"    { if (!(Confirm-PowershellDetected  -DetectionNode $DetectionNode -RunFolder $RunFolder)) {return $false} ; break}
             default  {Log -LogLevel Warn -Line "Unknown detection step in XML $($DetectionNode.LocalName)"; break}
         }
     }
