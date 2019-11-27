@@ -19,7 +19,9 @@ function Log ([LogLevel]$LogLevel, $Line)
 function Get-RunFolder($ComponentName)
 {
     $Folder = "C:\Temp\$ComponentName"
-    Remove-Item -Path $Folder -Recurse -Force | Out-Null
+    if (Test-Path -Path $Folder) {
+        Remove-Item -Path $Folder -Recurse -Force | Out-Null
+    }
     New-Item -Path $Folder -ItemType Directory | Out-Null
     return $Folder
 }
@@ -154,7 +156,7 @@ function Install-Component($ComponentName)
         }
     }
 
-    foreach ($StepNode in $PackageNode.ChildNodes) {
+    foreach ($StepNode in $PackageNode.steps.ChildNodes) {
         switch ($StepNode.LocalName) {
             "download"   { if (!(Step-Download  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             "create_dir" { if (!(Step-CreateDir -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
