@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <detect>
+        <file>
+            <path>C:\bin\conan\conan\conan.exe</path>
+            <version>1.20.4.0</version>
+        </file>
+    </detect>
     <steps>
         <download>https://dl.bintray.com/conan/installers/conan-win-64_1_20_4.exe</download>
         <command>
