@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <command>
+            <commandline>dism.exe</commandline>
+            <args>
+                <arg>/Online</arg>
+                <arg>/NoRestart</arg>
+                <arg>/Enable-Feature</arg>
+                <arg>/FeatureName:NetFx3ServerFeatures</arg>
+            </args>
+        </command>
+        <command>
+            <commandline>dism.exe</commandline>
+            <args>
+                <arg>/Online</arg>
+                <arg>/NoRestart</arg>
+                <arg>/Enable-Feature</arg>
+                <arg>/FeatureName:NetFx3</arg>
+            </args>
+        </command>
+    </steps>
+</package>
+
+
+
+
