@@ -100,6 +100,24 @@ function Step-Path($XmlNode, $RunFolder)
     return $True
 }
 
+function Detect-File($DetectionNode, $RunFolder)
+{
+    if (!(Test-Path -Path $DetectionNode.path)) {
+        return $False
+    }
+    return ((Get-Item $DetectionNode.path) -is [System.IO.FileInfo])
+}
+
+function Is-Detected($XmlNode, $RunFolder)
+{
+    foreach ($DetectionNode in $XmlNode.ChildNodes) {
+        switch ($DetectionNode.LocalName) {
+            "file"   { if (!(Detect-File  -DetectionNode $DetectionNode -RunFolder $RunFolder)) {return $false} ; break}
+            default  {Log -LogLevel Warn -Line "Unknown detection step in XML $($DetectionNode.LocalName)"; break}
+        }
+    }
+    return $True
+}
 
 function Install-Component($ComponentName)
 {
@@ -128,6 +146,14 @@ function Install-Component($ComponentName)
 
     $RunFolder = Get-RunFolder -ComponentName $ComponentName
 
+    $DetectionNode = $PackageNode.detect
+    if ($null -ne $DetectionNode ) {
+        if (Is-Detected -XmlNode $DetectionNode -RunFolder $RunFolder) {
+            Log -LogLevel Info  -Line "Package is detected $ComponentName"
+            return $True
+        }
+    }
+
     foreach ($StepNode in $PackageNode.ChildNodes) {
         switch ($StepNode.LocalName) {
             "download"   { if (!(Step-Download  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
@@ -137,6 +163,15 @@ function Install-Component($ComponentName)
             default {Log -LogLevel Warn -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
+
+    if ($null -ne $DetectionNode ) {
+        if (Is-Detected -XmlNode $DetectionNode -RunFolder $RunFolder) {
+            Log -LogLevel Error  -Line "Package is not detected after install $ComponentName"
+            return $False
+        }
+    }
+
+    return $True
 }
 
 
