@@ -102,6 +102,16 @@ function Step-Path($XmlNode, $RunFolder)
     return $True
 }
 
+function Step-Command($XmlNode, $RunFolder)
+{
+    pushd $RunFolder
+    $command = $XmlNode.commandLine
+    Log -LogLevel Info -Line "Executing:$command"
+    Start-Process -FilePath $command -ArgumentList $XmlNode.args -Wait
+    popd
+    return $True
+}
+
 function Detect-File($DetectionNode, $RunFolder)
 {
     if (!(Test-Path -Path $DetectionNode.path)) {
@@ -162,6 +172,7 @@ function Install-Component($ComponentName)
             "create_dir" { if (!(Step-CreateDir -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             "copy_file"  { if (!(Step-CopyFile  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             "path"       { if (!(Step-Path      -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "command"    { if (!(Step-Command   -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             default {Log -LogLevel Warn -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
