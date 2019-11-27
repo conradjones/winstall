@@ -82,7 +82,22 @@ function Step-CopyFile($XmlNode, $RunFolder)
 
 function Step-Path($XmlNode, $RunFolder)
 {
-
+    $PathToAdd = $XmlNode.InnerText
+    $PathKeyValue = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path
+    $AllPaths = $PathKeyValue.split(";")
+    if ($AllPaths.Contains($PathToAdd)) {
+        Log -LogLevel Info -Line "System path variable already includes:$PathToAdd"
+        return $True
+    }
+    $AllPaths += $PathToAdd
+    $PathKeyValue = $AllPaths -join ';'
+    Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value $PathKeyValue -Force
+    $PathKeyValue = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path
+    if (!($PathKeyValue.Contains($PathToAdd))) {
+        Log -LogLevel Info -Line "Failed to add:$PathToAdd to System path variable"
+        return $False
+    }
+    return $True
 }
 
 
@@ -115,9 +130,10 @@ function Install-Component($ComponentName)
 
     foreach ($StepNode in $PackageNode.ChildNodes) {
         switch ($StepNode.LocalName) {
-            "download" { if (!(Step-Download -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            #"create_dir" { if (!(Step-CreateDir -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "copy_file" { if (!(Step-CopyFile -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "download"   { if (!(Step-Download  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "create_dir" { if (!(Step-CreateDir -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "copy_file"  { if (!(Step-CopyFile  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "path"       { if (!(Step-Path      -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
             default {Log -LogLevel Warn -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
