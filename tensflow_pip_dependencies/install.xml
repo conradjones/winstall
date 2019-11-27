@@ -3,7 +3,12 @@
 	<steps>
 		<command>
 			<commandline>C:\Python37\Scripts\Pip3</commandline>
-			<args>install six numpy wheel</args>
+			<args>
+				<arg>install</arg>
+				<arg>six</arg>
+				<arg>numpy</arg>
+				<arg>wheel</arg>
+			</args>
 		</command>
 		<command>
 			<commandline>C:\Python37\Scripts\Pip3</commandline>

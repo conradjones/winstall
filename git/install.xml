@@ -4,7 +4,16 @@
         <download>https://github.com/git-for-windows/git/releases/download/v2.24.0.windows.2/Git-2.24.0.2-64-bit.exe</download>
         <command>
             <commandline>Git-2.24.0.2-64-bit.exe</commandline>
-            <args>/DIR=C:\bin\git /VERYSILENT /NORESTART /NOCANCEL /SP- /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /COMPONENTS="icons,ext\reg\shellhere"</args>
+            <args>
+                <arg>/DIR=C:\bin\git</arg>
+                <arg>/VERYSILENT</arg>
+                <arg>/NORESTART</arg>
+                <arg>/NOCANCEL</arg>
+                <arg>/SP-</arg>
+                <arg>/CLOSEAPPLICATIONS</arg>
+                <arg>/RESTARTAPPLICATIONS</arg>
+                <arg>/COMPONENTS="icons,ext\reg\shellhere"</arg>
+            </args>
         </command>
         <path>C:\bin\git</path>
     </steps>

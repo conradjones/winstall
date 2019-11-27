@@ -107,7 +107,11 @@ function Step-Command($XmlNode, $RunFolder)
     pushd $RunFolder
     $command = $XmlNode.commandLine
     Log -LogLevel Info -Line "Executing:$command"
-    Start-Process -FilePath $command -ArgumentList $XmlNode.args -Wait
+    $args = @()
+    foreach ($ArgNode in $XmlNode.args.arg) {
+        $args += $ArgNode
+    }
+    Start-Process -FilePath $command -ArgumentList $args -Wait
     popd
     return $True
 }

@@ -4,7 +4,12 @@
         <download>http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20190524.exe</download>
         <command>
             <commandline>msys2-x86_64-20190524.exe</commandline>
-            <args>--platform minimal --script msys2.qs</args>
+            <args>
+                <arg>--platform</arg>
+                <arg>minimal</arg>
+                <arg>--script</arg>
+                <arg>msys2.qs<arg>
+            </args>
         </command>
         <path>C:\msys64\usr\bin</path>
     </steps>
