@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <download>https://github.com/Kitware/CMake/releases/download/v3.16.0/cmake-3.16.0-win64-x64.msi</download>
+        <command>
+            <commandline>msiexec.exe</commandline>
+            <args>
+                <arg>/I</arg>
+                <arg>cmake-3.16.0-win64-x64.msi</arg>
+                <arg>/qn</arg>
+                <arg>/norestart</arg>
+                <arg>REBOOT=R</arg>
+            </args>
+        </command>
+        <path>C:\Program Files\CMake\bin</path>
+    </steps>
+</package>
+
+
+
+
