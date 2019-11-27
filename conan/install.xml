@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <download>https://dl.bintray.com/conan/installers/conan-win-64_1_20_4.exe</download>
+        <command>
+            <commandline>conan-win-64_1_20_4.exe</commandline>
+            <args>
+                <arg>/DIR=C:\bin\conan</arg>
+                <arg>/VERYSILENT</arg>
+                <arg>/NORESTART</arg>
+                <arg>/NOCANCEL</arg>
+                <arg>/SP-</arg>
+                <arg>/CLOSEAPPLICATIONS</arg>
+                <arg>/RESTARTAPPLICATIONS</arg>
+            </args>
+        </command>
+        <path>C:\bin\conan\conan</path>
+    </steps>
+</package>
