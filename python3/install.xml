@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <detect>
+        <file>
+            <path>C:\bin\Python37\python.exe</path>
+            <version>3.7.5150.1013</version>
+        </file>
+        <file>
+            <path>C:\bin\Python37\scripts\pip.exe</path>
+        </file>
+    </detect>
     <steps>
         <download>https://www.python.org/ftp/python/3.7.5/python-3.7.5-amd64.exe</download>
         <command>
@@ -12,5 +21,6 @@
             </args>
         </command>
         <path>C:\bin\Python37</path>
+        <path>C:\bin\Python37\Scripts</path>
     </steps>
 </package>
