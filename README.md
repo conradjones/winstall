@@ -1,5 +1,7 @@
 # WinInstall
  Scripts and configs for windows CI machines
+ 
+ -> Can be used in conjunction with image builder for orchestrating the virtual machine and image creation. https://github.com/conradjones/image_builder
 
 
 Installing build tools on linux and macos is easy and normally a case of brew install .... or apt install .... , windows tends to be a bit more tricky and involved, this project aims to provide a scripted repeatable method of installing dependencies for windows.
