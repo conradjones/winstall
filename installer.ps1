@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][String]$ComponentName)
+param([Parameter(Mandatory=$true)][String]$ComponentPath)
 
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 
@@ -50,7 +50,7 @@ function Step-CreateDir($XmlNode, $RunFolder)
        Log -LogLevel Error -Line "$FolderName already exists and is not a folder"
        return $False
     }
-    New-Item -Path $Folder -ItemType Directory | Out-Null
+    New-Item -Path $FolderName -ItemType Directory | Out-Null
     if (Test-Path -Path $FolderName) {
         Log -LogLevel Error -Line "Failed to create $FolderName"
         return $False
@@ -189,10 +189,10 @@ function Confirm-IsDetected($XmlNode, $RunFolder)
     return $True
 }
 
-function Install-Component($ComponentName)
+function Install-Component($ComponentPath)
 {
+    $ComponentName = Split-Path -Path $ComponentPath -Leaf
 
-    $ComponentPath = Join-Path -Path $scriptPath -ChildPath $ComponentName
     if (!(Test-Path -Path $ComponentPath)) {
         Log -LogLevel Error  -Line "Failed to find $ComponentPath"
         return
@@ -247,4 +247,4 @@ function Install-Component($ComponentName)
 }
 
 
-Install-Component -ComponentName $ComponentName
+Install-Component -ComponentPath $ComponentPath
