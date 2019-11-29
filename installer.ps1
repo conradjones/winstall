@@ -219,10 +219,12 @@ function Install-Component($ComponentPath)
     $DetectionNode = $PackageNode.detect
     if ($null -ne $DetectionNode ) {
         if (Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder) {
-            Log -LogLevel Info  -Line "Package is detected $ComponentName"
+            Log -LogLevel Info  -Line "Package is detected:$ComponentName"
             return $True
         }
     }
+
+    Log -LogLevel Info  -Line "Installing package:$ComponentName"
 
     foreach ($StepNode in $PackageNode.steps.ChildNodes) {
         switch ($StepNode.LocalName) {
@@ -241,6 +243,7 @@ function Install-Component($ComponentPath)
             Log -LogLevel Error  -Line "Package is not detected after install $ComponentName"
             return $False
         }
+        Log -LogLevel Info  -Line "Post install package is detected $ComponentName"
     }
 
     return $True
