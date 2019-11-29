@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <reg_set>
+            <key>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations</key>
+            <value_name>SecurityLayer</value_name>
+            <value_type>REG_DWORD</value_type>
+            <value>0</value>
+        </reg_set>
+        <reg_set>
+            <key>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp</key>
+            <value_name>UserAuthentication</value_name>
+            <value_type>REG_DWORD</value_type>
+            <value>0</value>
+        </reg_set>
+        <command>
+            <commandline>gpupdate.exe</commandline>
+            <args>
+                <arg>/force</arg>
+            </args>
+        </command>
+    </steps>
+</package>
+
+
+
+
