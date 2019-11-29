@@ -1,7 +1,5 @@
 param([Parameter(Mandatory=$true)][String]$ComponentPath)
 
-$scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
-
 enum LogLevel
 {
     Info
@@ -12,9 +10,14 @@ enum LogLevel
 
 function Log ([LogLevel]$LogLevel, $Line)
 {
-    $LogLevel.ToString() + ":" + $Line | Out-Host
+    $Line = $LogLevel.ToString() + ":" + $Line
+    switch ($LogLevel) {
+        Info    { Write-Verbose  -Message $Line -Verbose }
+        Debug   { Write-Debug    -Message $Line }
+        Error   { Write-Error    -Message $Line }
+        Warn    { Write-Warning  -Message $Line }
+    }
 }
-
 
 function Get-RunFolder($ComponentName)
 {
@@ -215,6 +218,7 @@ function Install-Component($ComponentPath)
     }
 
     $RunFolder = Get-RunFolder -ComponentName $ComponentName
+    Log -LogLevel Info  -Line "Package:$ComponentName runfolder:$RunFolder"
 
     $DetectionNode = $PackageNode.detect
     if ($null -ne $DetectionNode ) {
