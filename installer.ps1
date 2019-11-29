@@ -23,7 +23,7 @@ function Log ([LogLevel]$LogLevel, $Line)
 
 function Get-RunFolder($ComponentName)
 {
-    $Folder = "C:\Temp\$ComponentName"
+    $Folder = "C:\.winstall\install\$ComponentName"
     if (Test-Path -Path $Folder) {
         Remove-Item -Path $Folder -Recurse -Force | Out-Null
     }
@@ -237,6 +237,21 @@ function Install-Component($ComponentPath)
     }
 
     $RunFolder = Get-RunFolder -ComponentName $ComponentName
+    $FilesPath = Join-Path -Path $ComponentPath -ChildPath "files"
+    if (Test-Path -Path $FilesPath) {
+        $ChildItems = Get-ChildItem -Path $FilesPath -Recurse
+        ForEach ($ChildItem in $ChildItems) {
+            $Dest = $ChildItem.FullName.Substring($FilesPath.Length + 1)
+            $Dest = Join-Path -Path $RunFolder -ChildPath $Dest
+            if ( $ChildItem.PSIsContainer ) {
+                New-Item -Path $Dest -ItemType Directory -Verbose
+            }
+            else {
+                Copy-Item -Path $ChildItem.FullName -Destination $Dest -Verbose
+            }
+        }
+    }
+
     Log -LogLevel Info  -Line "Package:$ComponentName runfolder:$RunFolder"
 
     $DetectionNode = $PackageNode.detect
