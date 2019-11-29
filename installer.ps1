@@ -36,7 +36,7 @@ function Step-Download($XmlNode, $RunFolder)
     $FileName = $XmlNode.InnerText  | Split-Path -Leaf 
     $Output = Join-Path -Path $RunFolder -ChildPath $FileName
     $WebClient = New-Object System.Net.WebClient
-    "Downloading:$($XmlNode.InnerText)" | Out-Host 
+    Log -LogLevel Info -Line "Downloading:$($XmlNode.InnerText)"
     $WebClient.DownloadFile($XmlNode.InnerText, $Output)
     if (!(Test-Path -Path $Output)) {
         Log -LogLevel Error -Line "Failed to download $($XmlNode.InnerText) to $Output"
@@ -117,8 +117,12 @@ function Step-Command($XmlNode, $RunFolder)
     }
     $argString = $args -join " "
     Log -LogLevel Info -Line "Executing:$command $argString"
-    Start-Process -FilePath $command -ArgumentList $args -Wait
+    $process = (Start-Process –PassThru -FilePath $command -ArgumentList $args -Wait)
     Pop-Location
+    if (0 -ne $process.ExitCode) {
+        Log -LogLevel Error -Line "Process returned non-zero:$($process.ExitCode)"
+        return $False
+    }
     return $True
 }
 
@@ -213,23 +217,23 @@ function Install-Component($ComponentPath)
 
     if (!(Test-Path -Path $ComponentPath)) {
         Log -LogLevel Error  -Line "Failed to find $ComponentPath"
-        return
+        return "Fail"
     }
     $ComponentXMLPath = Join-Path -Path $ComponentPath -ChildPath "install.xml"
     if (!(Test-Path -Path $ComponentXMLPath)) {
         Log -LogLevel Error  -Line "Failed to find $ComponentXMLPath"
-        return
+        return "Fail"
     }
     [xml]$XmlDocument = Get-Content -Path $ComponentXMLPath
     if ($null -eq $XmlDocument) {
         Log -LogLevel Error  -Line "Failed to find parse $ComponentXMLPath"
-        return
+        return "Fail"
     }
 
     $PackageNode = $XmlDocument.package
     if ($null -eq $PackageNode) {
         Log -LogLevel Error  -Line "Failed to find package node in $ComponentXMLPath"
-        return
+        return "Fail"
     }
 
     $RunFolder = Get-RunFolder -ComponentName $ComponentName
@@ -239,7 +243,7 @@ function Install-Component($ComponentPath)
     if ($null -ne $DetectionNode ) {
         if (Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder) {
             Log -LogLevel Info  -Line "Package is detected:$ComponentName"
-            return $True
+            return "AlreadyInstalled"
         }
     }
 
@@ -247,32 +251,32 @@ function Install-Component($ComponentPath)
 
     foreach ($StepNode in $PackageNode.steps.ChildNodes) {
         switch ($StepNode.LocalName) {
-            "download"   { if (!(Step-Download   -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "create_dir" { if (!(Step-CreateDir  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "copy_file"  { if (!(Step-CopyFile   -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "path"       { if (!(Step-Path       -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "command"    { if (!(Step-Command    -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "reg_set"    { if (!(Step-RegSet     -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "powershell" { if (!(Step-Powershell -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "download"   { if (!(Step-Download   -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "create_dir" { if (!(Step-CreateDir  -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "copy_file"  { if (!(Step-CopyFile   -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "path"       { if (!(Step-Path       -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "command"    { if (!(Step-Command    -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "reg_set"    { if (!(Step-RegSet     -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "powershell" { if (!(Step-Powershell -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             default {Log -LogLevel Error -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
 
-    $RebootNode = $PackageNode.detect
+    $RebootNode = $PackageNode.reboot
     if ($null -ne $RebootNode) {
         Log -LogLevel Info  -Line "Reboot required $ComponentName"
-        return $True
+        return "Reboot"
     }
 
     if ($null -ne $DetectionNode ) {
         if (!(Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder)) {
             Log -LogLevel Error  -Line "Package is not detected after install $ComponentName"
-            return $False
+            return "Fail"
         }
         Log -LogLevel Info  -Line "Post install package is detected $ComponentName"
     }
 
-    return $True
+    return "Success"
 }
 
 
