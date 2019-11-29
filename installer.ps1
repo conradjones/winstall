@@ -139,6 +139,19 @@ function Step-RegSet($XmlNode, $RunFolder)
     return $True
 }
 
+function Step-Powershell($XmlNode, $RunFolder)
+{
+    $scriptBlock = $XmlNode.scriptblock
+    if ($null -eq $scriptBlock) {
+        Log -LogLevel Error -Line "scriptblock node is missing from powershell step"
+        exit 1
+    }
+
+    Invoke-Expression -Command $scriptBlock
+
+    return $True
+}
+
 function Confirm-FileDetected($DetectionNode, $RunFolder)
 {
     if (!(Test-Path -Path $DetectionNode.path)) {
@@ -167,13 +180,13 @@ function Confirm-PowershellDetected($DetectionNode, $RunFolder)
 {
     $scriptBlock = $DetectionNode.scriptblock
     if ($null -eq $scriptBlock) {
-        Log -LogLevel Info -Line "Powershell detection node missing scriptblock"
+        Log -LogLevel Error -Line "Powershell detection node missing scriptblock"
         exit 1
     }
 
     $expected = $DetectionNode.expected
     if ($null -eq $expected) {
-        Log -LogLevel Info -Line "Powershell detection node missing expected"
+        Log -LogLevel Error -Line "Powershell detection node missing expected"
         exit 1
     }
 
@@ -234,13 +247,14 @@ function Install-Component($ComponentPath)
 
     foreach ($StepNode in $PackageNode.steps.ChildNodes) {
         switch ($StepNode.LocalName) {
-            "download"   { if (!(Step-Download  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "create_dir" { if (!(Step-CreateDir -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "copy_file"  { if (!(Step-CopyFile  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "path"       { if (!(Step-Path      -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "command"    { if (!(Step-Command   -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            "reg_set"    { if (!(Step-RegSet    -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
-            default {Log -LogLevel Warn -Line "Unknown step in XML $($StepNode.LocalName)"; break}
+            "download"   { if (!(Step-Download   -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "create_dir" { if (!(Step-CreateDir  -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "copy_file"  { if (!(Step-CopyFile   -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "path"       { if (!(Step-Path       -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "command"    { if (!(Step-Command    -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "reg_set"    { if (!(Step-RegSet     -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            "powershell" { if (!(Step-Powershell -XmlNode $StepNode -RunFolder $RunFolder)) {exit 1} ; break}
+            default {Log -LogLevel Error -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
 
