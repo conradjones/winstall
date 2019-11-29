@@ -56,7 +56,7 @@ function Step-CreateDir($XmlNode, $RunFolder)
        return $False
     }
     New-Item -Path $FolderName -ItemType Directory | Out-Null
-    if (Test-Path -Path $FolderName) {
+    if (!(Test-Path -Path $FolderName)) {
         Log -LogLevel Error -Line "Failed to create $FolderName"
         return $False
     }
