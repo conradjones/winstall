@@ -1,5 +1,7 @@
 param([Parameter(Mandatory=$true)][String]$ComponentPath)
 
+$ErrorActionPreference = “Stop”
+
 enum LogLevel
 {
     Info
