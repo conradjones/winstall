@@ -258,6 +258,12 @@ function Install-Component($ComponentPath)
         }
     }
 
+    $RebootNode = $PackageNode.detect
+    if ($null -ne $RebootNode) {
+        Log -LogLevel Info  -Line "Reboot required $ComponentName"
+        return $True
+    }
+
     if ($null -ne $DetectionNode ) {
         if (!(Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder)) {
             Log -LogLevel Error  -Line "Package is not detected after install $ComponentName"
