@@ -156,15 +156,35 @@ function Step-Powershell($XmlNode, $RunFolder)
     return $True
 }
 
+function Step-Unzip($XmlNode, $RunFolder)
+{
+    $zipfile = $XmlNode.zipfile
+    if ($null -eq $zipfile) {
+        Log -LogLevel Error -Line "zipfile node is missing from unzip step"
+        exit 1
+    }
+
+    $destination = $XmlNode.destination
+    if ($null -eq $destination) {
+        Log -LogLevel Error -Line "destination node is missing from unzip step"
+        exit 1
+    }
+
+    Expand-Archive -Path $zipfile -Destination $destination -Verbose
+
+    return $True
+}
+
+
 function Confirm-FileDetected($DetectionNode, $RunFolder)
 {
     if (!(Test-Path -Path $DetectionNode.path)) {
-        Log -LogLevel Debug -Line "(Detection):$($DetectionNode.path) not found"
+        Log -LogLevel Info -Line "(Detection):$($DetectionNode.path) not found"
         return $False
     }
 
     if (!((Get-Item $DetectionNode.path) -is [System.IO.FileInfo])) {
-        Log -LogLevel Debug -Line "(Detection):$($DetectionNode.path) found but is not a file"
+        Log -LogLevel Info -Line "(Detection):$($DetectionNode.path) found but is not a file"
         return $False
     }
 
@@ -172,7 +192,7 @@ function Confirm-FileDetected($DetectionNode, $RunFolder)
     if ($null -ne $expectedVersion) {
         $foundVersion = (Get-Command $DetectionNode.path).Version
         if ($foundVersion -ne [version]$expectedVersion) {
-            Log -LogLevel Debug -Line "(Detection):$($DetectionNode.path) found but version is:$foundVersion (expected:$expectedVersion)"
+            Log -LogLevel Info -Line "(Detection):$($DetectionNode.path) found but version is:$foundVersion (expected:$expectedVersion)"
             return $False
         }
     }
@@ -211,6 +231,23 @@ function Confirm-IsDetected($XmlNode, $RunFolder)
     return $True
 }
 
+function Copy-FolderContents($SourcePath, $DestinationPath)
+{
+    $ChildItems = Get-ChildItem -Path $SourcePath -Recurse
+    ForEach ($ChildItem in $ChildItems) {
+        $Dest = $ChildItem.FullName.Substring($SourcePath.Length + 1)
+        $Dest = Join-Path -Path $DestinationPath -ChildPath $Dest
+        if ($ChildItem.PSIsContainer)
+        {
+            New-Item -Path $Dest -ItemType Directory -Verbose | Out-Null
+        }
+        else
+        {
+            Copy-Item -Path $ChildItem.FullName -Destination $Dest -Verbose
+        }
+    }
+}
+
 function Install-Component($ComponentPath)
 {
     $ComponentName = Split-Path -Path $ComponentPath -Leaf
@@ -237,21 +274,6 @@ function Install-Component($ComponentPath)
     }
 
     $RunFolder = Get-RunFolder -ComponentName $ComponentName
-    $FilesPath = Join-Path -Path $ComponentPath -ChildPath "files"
-    if (Test-Path -Path $FilesPath) {
-        $ChildItems = Get-ChildItem -Path $FilesPath -Recurse
-        ForEach ($ChildItem in $ChildItems) {
-            $Dest = $ChildItem.FullName.Substring($FilesPath.Length + 1)
-            $Dest = Join-Path -Path $RunFolder -ChildPath $Dest
-            if ( $ChildItem.PSIsContainer ) {
-                New-Item -Path $Dest -ItemType Directory -Verbose
-            }
-            else {
-                Copy-Item -Path $ChildItem.FullName -Destination $Dest -Verbose
-            }
-        }
-    }
-
     Log -LogLevel Info  -Line "Package:$ComponentName runfolder:$RunFolder"
 
     $DetectionNode = $PackageNode.detect
@@ -260,6 +282,11 @@ function Install-Component($ComponentPath)
             Log -LogLevel Info  -Line "Package is detected:$ComponentName"
             return "AlreadyInstalled"
         }
+    }
+
+    $FilesPath = Join-Path -Path $ComponentPath -ChildPath "files"
+    if (Test-Path -Path $FilesPath) {
+        Copy-FolderContents -SourcePath $FilesPath -DestinationPath $RunFolder
     }
 
     Log -LogLevel Info  -Line "Installing package:$ComponentName"
@@ -273,6 +300,7 @@ function Install-Component($ComponentPath)
             "command"    { if (!(Step-Command    -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             "reg_set"    { if (!(Step-RegSet     -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             "powershell" { if (!(Step-Powershell -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "unzip"      { if (!(Step-Unzip      -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             default {Log -LogLevel Error -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
