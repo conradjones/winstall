@@ -16,9 +16,10 @@
                 <arg>/qn</arg>
                 <arg>/norestart</arg>
                 <arg>REBOOT=R</arg>
+                <arg>TARGETDIR=C:\bin\cmake</arg>
             </args>
         </command>
-        <path>C:\Program Files\CMake\bin</path>
+        <path>C:\bin\cmake</path>
     </steps>
 </package>
 
