@@ -1,4 +1,5 @@
-param([Parameter(Mandatory=$true)][String]$ComponentPath)
+param(  [Parameter(Mandatory=$true)][String]$ComponentPath,
+        [switch] $DetectOnly)
 
 $ErrorActionPreference = “Stop”
 
@@ -33,7 +34,7 @@ function Get-RunFolder($ComponentName)
 
 function Step-Download($XmlNode, $RunFolder)
 {
-    $FileName = $XmlNode.InnerText  | Split-Path -Leaf 
+    $FileName = $XmlNode.InnerText  | Split-Path -Leaf
     $Output = Join-Path -Path $RunFolder -ChildPath $FileName
     $WebClient = New-Object System.Net.WebClient
     Log -LogLevel Info -Line "Downloading:$($XmlNode.InnerText)"
@@ -78,7 +79,7 @@ function Step-CopyFile($XmlNode, $RunFolder)
     }
 
     $SourcePath = Join-Path -Path $RunFolder -ChildPath $SourceNode
-    $DestPath = $DestNode 
+    $DestPath = $DestNode
     Copy-Item -Path $SourcePath -Destination $DestPath
     if (!(Test-Path -Path $DestPath)) {
         Log -LogLevel Error -Line "Failed to copy $SourcePath to $DestPath"
@@ -288,7 +289,7 @@ function Copy-FolderContents($SourcePath, $DestinationPath)
     }
 }
 
-function Install-Component($ComponentPath)
+function Install-Component($ComponentPath, $DetectOnly)
 {
     $ComponentName = Split-Path -Path $ComponentPath -Leaf
 
@@ -322,6 +323,14 @@ function Install-Component($ComponentPath)
             Log -LogLevel Info  -Line "Package is detected:$ComponentName"
             return "AlreadyInstalled"
         }
+        if ($DetectOnly) {
+            Log -LogLevel Info  -Line "Package is not detected:$ComponentName"
+            return "Fail"
+        }
+    }
+
+    if ($DetectOnly) {
+        return "Success"
     }
 
     $FilesPath = Join-Path -Path $ComponentPath -ChildPath "files"
@@ -364,4 +373,4 @@ function Install-Component($ComponentPath)
 }
 
 
-Install-Component -ComponentPath $ComponentPath
+Install-Component -ComponentPath $ComponentPath -DetectOnly:$DetectOnly
