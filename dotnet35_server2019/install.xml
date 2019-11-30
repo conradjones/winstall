@@ -10,6 +10,7 @@
             <expected>Enabled</expected>
         </powershell>
     </detect>
+    <reboot/>
     <steps>
         <command>
             <commandline>dism.exe</commandline>
