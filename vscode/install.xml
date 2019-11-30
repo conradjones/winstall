@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>C:\Program Files\Microsoft VS Code\Code.exe</path>
+            <version>1.40.2.0</version>
+        </file>
+    </detect>
+    <steps>
+        <download>https://az764295.vo.msecnd.net/stable/f359dd69833dd8800b54d458f6d37ab7c78df520/VSCodeSetup-x64-1.40.2.exe</download>
+        <command>
+            <commandline>VSCodeSetup-x64-1.40.2.exe</commandline>
+            <args>
+                <arg>/VERYSILENT</arg>
+                <arg>/MERGETASKS=!runcode</arg>
+            </args>
+        </command>
+    </steps>
+</package>
