@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>c:\bin\procexp64.exe</path>
+        </file>
+    </detect>
+    <steps>
+        <download>https://download.sysinternals.com/files/ProcessExplorer.zip</download>
+        <create_dir>c:\bin</create_dir>
+        <unzip>
+            <zipfile>c:\.winstall\install\sysinternals_processexplorer\ProcessExplorer.zip</zipfile>
+            <destination>c:\bin</destination>
+        </unzip>
+        <path>c:\bin</path>
+    </steps>
+</package>
