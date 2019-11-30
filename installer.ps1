@@ -175,6 +175,12 @@ function Step-Unzip($XmlNode, $RunFolder)
     return $True
 }
 
+function Step-KillProcess($XmlNode, $RunFolder)
+{
+    Get-Process -Name $XmlNode | Stop-Process -Force -Verbose
+
+    return $True
+}
 
 function Confirm-FileDetected($DetectionNode, $RunFolder)
 {
@@ -293,14 +299,15 @@ function Install-Component($ComponentPath)
 
     foreach ($StepNode in $PackageNode.steps.ChildNodes) {
         switch ($StepNode.LocalName) {
-            "download"   { if (!(Step-Download   -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            "create_dir" { if (!(Step-CreateDir  -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            "copy_file"  { if (!(Step-CopyFile   -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            "path"       { if (!(Step-Path       -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            "command"    { if (!(Step-Command    -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            "reg_set"    { if (!(Step-RegSet     -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            "powershell" { if (!(Step-Powershell -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            "unzip"      { if (!(Step-Unzip      -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "download"     { if (!(Step-Download    -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "create_dir"   { if (!(Step-CreateDir   -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "copy_file"    { if (!(Step-CopyFile    -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "path"         { if (!(Step-Path        -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "command"      { if (!(Step-Command     -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "reg_set"      { if (!(Step-RegSet      -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "powershell"   { if (!(Step-Powershell  -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "unzip"        { if (!(Step-Unzip       -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "kill_process" { if (!(Step-KillProcess -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             default {Log -LogLevel Error -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
