@@ -19,6 +19,9 @@
                 <arg>/NoRestart</arg>
                 <arg>/Enable-Feature</arg>
                 <arg>/FeatureName:NetFx3ServerFeatures</arg>
+                <arg>/All</arg>
+                <arg>/Source:D:\sources\sxs</arg>
+                <arg>/LimitAccess</arg>
             </args>
             <exit_codes>
                 <exit_code>0</exit_code>
@@ -32,6 +35,9 @@
                 <arg>/NoRestart</arg>
                 <arg>/Enable-Feature</arg>
                 <arg>/FeatureName:NetFx3</arg>
+                <arg>/All</arg>
+                <arg>/Source:D:\sources\sxs</arg>
+                <arg>/LimitAccess</arg>
             </args>
             <exit_codes>
                 <exit_code>0</exit_code>
