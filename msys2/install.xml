@@ -3,7 +3,6 @@
     <detect>
         <file>
             <path>C:\msys64\msys2.exe</path>
-            <version>0.3.0.0</version>
         </file>
         <file>
             <path>C:\msys64\usr\bin\bash.exe</path>
@@ -11,15 +10,21 @@
     </detect>
     <steps>
         <download>http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20190524.exe</download>
-        <command>
-            <commandline>msys2-x86_64-20190524.exe</commandline>
-            <args>
-                <arg>--platform</arg>
-                <arg>minimal</arg>
-                <arg>--script</arg>
-                <arg>msys2.qs<arg>
-            </args>
-        </command>
+        <powershell>
+            <scriptblock>
+            $arguments = @("--script", "c:\.winstall\install\msys2\msys2.qs", "--platform", "minimal")
+$process = Start-Process -FilePath c:\.winstall\install\msys2\msys2-x86_64-20190524.exe -ArgumentList $arguments -PassThru -Verbose
+
+while (!($process.HasExited)) {
+    $parent_process = Get-Process -Name "msys2-x86_64-20190524" -ErrorAction SilentlyContinue
+    $child_process = Get-Process -Name "gpg-agent" -ErrorAction SilentlyContinue
+    if (($child_process) -and !($parent_process)) { Stop-Process -Force -Verbose }
+    $child_process = Get-Process -Name "dirmngr" -ErrorAction SilentlyContinue
+    if (($child_process) -and !($parent_process)) { Stop-Process -Force -Verbose }
+    Start-Sleep -Seconds 1
+}
+            </scriptblock>
+        </powershell>
         <path>C:\msys64\usr\bin</path>
     </steps>
 </package>
