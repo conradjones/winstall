@@ -107,6 +107,25 @@ function Step-Path($XmlNode, $RunFolder)
     return $True
 }
 
+function Check-CommandExitCodes($command_node, $exit_code_to_check)
+{
+    $str = $exit_code_to_check.GetType() | Out-String
+    Log -LogLevel Info -Line "str2:$exit_code_to_check"
+
+    $exit_codes = $command_node.exit_codes
+    if ($null -eq $exit_codes) {
+        return ($process_exit_code -eq 0)
+    }
+    foreach ($exit_code in $exit_codes.exit_code) {
+        Log -LogLevel Info -Line "exit_code_to_check:$exit_code_to_check"
+        Log -LogLevel Info -Line "exit_code:$($exit_code)"
+        if ($exit_code_to_check -eq [int]$exit_code) {
+            return $true
+        }
+    }
+    return $false
+}
+
 function Step-Command($XmlNode, $RunFolder)
 {
     Push-Location -Path $RunFolder
@@ -119,11 +138,26 @@ function Step-Command($XmlNode, $RunFolder)
     Log -LogLevel Info -Line "Executing:$command $argString"
     $process = (Start-Process –PassThru -FilePath $command -ArgumentList $args -Wait)
     Pop-Location
-    if (0 -ne $process.ExitCode) {
-        Log -LogLevel Error -Line "Process returned non-zero:$($process.ExitCode)"
-        return $False
+
+    $process_exit_code = $process.ExitCode
+
+    $exit_codes = $XmlNode.exit_codes
+    if ($null -eq $exit_codes) {
+        if ([Int32]$process_exit_code -ne [Int32]0) {
+            Log -LogLevel Error -Line "Process returned non-permitted exit code:$process_exit_code"
+            return $False
+        }
+        return $True
     }
-    return $True
+
+    foreach ($exit_code in $exit_codes.exit_code) {
+        if ([Int32]$process_exit_code -eq [Int32]$exit_code) {
+            return $true
+        }
+    }
+
+    Log -LogLevel Error -Line "Process returned non-permitted exit code:$exitCode"
+    return $False
 }
 
 function Step-RegSet($XmlNode, $RunFolder)

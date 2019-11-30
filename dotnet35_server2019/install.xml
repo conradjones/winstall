@@ -20,6 +20,10 @@
                 <arg>/Enable-Feature</arg>
                 <arg>/FeatureName:NetFx3ServerFeatures</arg>
             </args>
+            <exit_codes>
+                <exit_code>0</exit_code>
+                <exit_code>5</exit_code>
+            </exit_codes>
         </command>
         <command>
             <commandline>dism.exe</commandline>
@@ -29,6 +33,10 @@
                 <arg>/Enable-Feature</arg>
                 <arg>/FeatureName:NetFx3</arg>
             </args>
+            <exit_codes>
+                <exit_code>0</exit_code>
+                <exit_code>5</exit_code>
+            </exit_codes>
         </command>
     </steps>
 </package>
