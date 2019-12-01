@@ -11,6 +11,7 @@
         <command>
             <commandline>Git-2.24.0.2-64-bit.exe</commandline>
             <args>
+                <arg>/LOG=GitInstaller.log</arg>
                 <arg>/DIR=C:\bin\git</arg>
                 <arg>/VERYSILENT</arg>
                 <arg>/NORESTART</arg>
