@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <reboot/>
+    <steps>
+        <command>
+            <commandline>e:\setup64.exe</commandline>
+            <args>
+                <arg>/s</arg>
+                <arg>/v"/qn reboot=r"</arg>
+            </args>
+            <exit_codes>
+                <exit_code>0</exit_code>
+                <exit_code>3010</exit_code>
+            </exit_codes>
+        </command>
+    </steps>
+</package>
