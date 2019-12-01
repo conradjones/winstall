@@ -347,7 +347,7 @@ function Install-Component($ComponentPath, $DetectOnly)
             "powershell"   { if (!(Step-Powershell  -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             "unzip"        { if (!(Step-Unzip       -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             "kill_process" { if (!(Step-KillProcess -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            "wait_process" { if (!(Wait-Process     -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            "wait_process" { if (!(Step-WaitProcess -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             default {Log -RunFolder $RunFolder -LogLevel Error -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
