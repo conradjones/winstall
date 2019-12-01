@@ -11,9 +11,11 @@ enum LogLevel
     Warn
 }
 
-function Log ([LogLevel]$LogLevel, $Line)
+function Log ($RunFolder, [LogLevel]$LogLevel, $Line)
 {
+    $LogFile = Join-Path -Path $RunFolder -ChildPath "PackageInstall.log"
     $Line = $LogLevel.ToString() + ":" + $Line
+    $Line | Out-File -FilePath $LogFile -Append
     switch ($LogLevel) {
         Info    { Write-Verbose  -Message $Line -Verbose }
         Debug   { Write-Debug    -Message $Line }
@@ -37,10 +39,10 @@ function Step-Download($XmlNode, $RunFolder)
     $FileName = $XmlNode.InnerText  | Split-Path -Leaf
     $Output = Join-Path -Path $RunFolder -ChildPath $FileName
     $WebClient = New-Object System.Net.WebClient
-    Log -LogLevel Info -Line "Downloading:$($XmlNode.InnerText)"
+    Log -RunFolder $RunFolder -LogLevel Info -Line "Downloading:$($XmlNode.InnerText)"
     $WebClient.DownloadFile($XmlNode.InnerText, $Output)
     if (!(Test-Path -Path $Output)) {
-        Log -LogLevel Error -Line "Failed to download $($XmlNode.InnerText) to $Output"
+        Log -RunFolder $RunFolder -LogLevel Error -Line "Failed to download $($XmlNode.InnerText) to $Output"
         return $False
     }
     return $True
@@ -53,12 +55,12 @@ function Step-CreateDir($XmlNode, $RunFolder)
        if ((Get-Item $FolderName) -is [System.IO.DirectoryInfo]) {
            return $true
        }
-       Log -LogLevel Error -Line "$FolderName already exists and is not a folder"
+       Log -RunFolder $RunFolder -LogLevel Error -Line "$FolderName already exists and is not a folder"
        return $False
     }
     New-Item -Path $FolderName -ItemType Directory | Out-Null
     if (!(Test-Path -Path $FolderName)) {
-        Log -LogLevel Error -Line "Failed to create $FolderName"
+        Log -RunFolder $RunFolder -LogLevel Error -Line "Failed to create $FolderName"
         return $False
     }
     return $True
@@ -68,13 +70,13 @@ function Step-CopyFile($XmlNode, $RunFolder)
 {
     $SourceNode = $XmlNode.source
     if ($Null -eq $SourceNode) {
-       Log -LogLevel Error -Line "source node is missing from copy_file step"
+       Log -RunFolder $RunFolder -LogLevel Error -Line "source node is missing from copy_file step"
        return $False
     }
 
     $DestNode = $XmlNode.dest
     if ($Null -eq $DestNode) {
-       Log -LogLevel Error -Line "dest node is missing from copy_file step"
+       Log -RunFolder $RunFolder -LogLevel Error -Line "dest node is missing from copy_file step"
        return $False
     }
 
@@ -82,7 +84,7 @@ function Step-CopyFile($XmlNode, $RunFolder)
     $DestPath = $DestNode
     Copy-Item -Path $SourcePath -Destination $DestPath
     if (!(Test-Path -Path $DestPath)) {
-        Log -LogLevel Error -Line "Failed to copy $SourcePath to $DestPath"
+        Log -RunFolder $RunFolder -LogLevel Error -Line "Failed to copy $SourcePath to $DestPath"
         return $False
     }
     return $True
@@ -94,7 +96,7 @@ function Step-Path($XmlNode, $RunFolder)
     $PathKeyValue = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path
     $AllPaths = $PathKeyValue.split(";")
     if ($AllPaths.Contains($PathToAdd)) {
-        Log -LogLevel Info -Line "System path variable already includes:$PathToAdd"
+        Log -RunFolder $RunFolder -LogLevel Info -Line "System path variable already includes:$PathToAdd"
         return $True
     }
     $AllPaths += $PathToAdd
@@ -102,29 +104,10 @@ function Step-Path($XmlNode, $RunFolder)
     Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value $PathKeyValue -Force
     $PathKeyValue = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path
     if (!($PathKeyValue.Contains($PathToAdd))) {
-        Log -LogLevel Info -Line "Failed to add:$PathToAdd to System path variable"
+        Log -RunFolder $RunFolder -LogLevel Info -Line "Failed to add:$PathToAdd to System path variable"
         return $False
     }
     return $True
-}
-
-function Check-CommandExitCodes($command_node, $exit_code_to_check)
-{
-    $str = $exit_code_to_check.GetType() | Out-String
-    Log -LogLevel Info -Line "str2:$exit_code_to_check"
-
-    $exit_codes = $command_node.exit_codes
-    if ($null -eq $exit_codes) {
-        return ($process_exit_code -eq 0)
-    }
-    foreach ($exit_code in $exit_codes.exit_code) {
-        Log -LogLevel Info -Line "exit_code_to_check:$exit_code_to_check"
-        Log -LogLevel Info -Line "exit_code:$($exit_code)"
-        if ($exit_code_to_check -eq [int]$exit_code) {
-            return $true
-        }
-    }
-    return $false
 }
 
 function Step-Command($XmlNode, $RunFolder)
@@ -136,7 +119,7 @@ function Step-Command($XmlNode, $RunFolder)
         $args += $ArgNode
     }
     $argString = $args -join " "
-    Log -LogLevel Info -Line "Executing:$command $argString"
+    Log -RunFolder $RunFolder -LogLevel Info -Line "Executing:$command $argString"
     $process = (Start-Process –PassThru -FilePath $command -ArgumentList $args -Wait)
     Pop-Location
 
@@ -145,7 +128,7 @@ function Step-Command($XmlNode, $RunFolder)
     $exit_codes = $XmlNode.exit_codes
     if ($null -eq $exit_codes) {
         if ([Int32]$process_exit_code -ne [Int32]0) {
-            Log -LogLevel Error -Line "Process returned non-permitted exit code:$process_exit_code"
+            Log -RunFolder $RunFolder -LogLevel Error -Line "Process returned non-permitted exit code:$process_exit_code"
             return $False
         }
         return $True
@@ -157,7 +140,7 @@ function Step-Command($XmlNode, $RunFolder)
         }
     }
 
-    Log -LogLevel Error -Line "Process returned non-permitted exit code:$exitCode"
+    Log -RunFolder $RunFolder -LogLevel Error -Line "Process returned non-permitted exit code:$process_exit_code"
     return $False
 }
 
@@ -182,7 +165,7 @@ function Step-Powershell($XmlNode, $RunFolder)
 {
     $scriptBlock = $XmlNode.scriptblock
     if ($null -eq $scriptBlock) {
-        Log -LogLevel Error -Line "scriptblock node is missing from powershell step"
+        Log -RunFolder $RunFolder -LogLevel Error -Line "scriptblock node is missing from powershell step"
         exit 1
     }
 
@@ -195,13 +178,13 @@ function Step-Unzip($XmlNode, $RunFolder)
 {
     $zipfile = $XmlNode.zipfile
     if ($null -eq $zipfile) {
-        Log -LogLevel Error -Line "zipfile node is missing from unzip step"
+        Log -RunFolder $RunFolder -LogLevel Error -Line "zipfile node is missing from unzip step"
         exit 1
     }
 
     $destination = $XmlNode.destination
     if ($null -eq $destination) {
-        Log -LogLevel Error -Line "destination node is missing from unzip step"
+        Log -RunFolder $RunFolder -LogLevel Error -Line "destination node is missing from unzip step"
         exit 1
     }
 
@@ -217,15 +200,28 @@ function Step-KillProcess($XmlNode, $RunFolder)
     return $True
 }
 
+function Step-WaitProcess($XmlNode, $RunFolder)
+{
+    $Process = @(Get-Process -Name $XmlNode)
+
+    while ($Process.Count -gt 0) {
+
+        Log -RunFolder $RunFolder -LogLevel Info -Line "Waiting for process:$XmlNode"
+        Start-Sleep -Seconds 1
+    }
+
+    return $True
+}
+
 function Confirm-FileDetected($DetectionNode, $RunFolder)
 {
     if (!(Test-Path -Path $DetectionNode.path)) {
-        Log -LogLevel Info -Line "(Detection):$($DetectionNode.path) not found"
+        Log -RunFolder $RunFolder -LogLevel Info -Line "(Detection):$($DetectionNode.path) not found"
         return $False
     }
 
     if (!((Get-Item $DetectionNode.path) -is [System.IO.FileInfo])) {
-        Log -LogLevel Info -Line "(Detection):$($DetectionNode.path) found but is not a file"
+        Log -RunFolder $RunFolder -LogLevel Info -Line "(Detection):$($DetectionNode.path) found but is not a file"
         return $False
     }
 
@@ -233,7 +229,7 @@ function Confirm-FileDetected($DetectionNode, $RunFolder)
     if ($null -ne $expectedVersion) {
         $foundVersion = (Get-Command $DetectionNode.path).Version
         if ($foundVersion -ne [version]$expectedVersion) {
-            Log -LogLevel Info -Line "(Detection):$($DetectionNode.path) found but version is:$foundVersion (expected:$expectedVersion)"
+            Log -RunFolder $RunFolder -LogLevel Info -Line "(Detection):$($DetectionNode.path) found but version is:$foundVersion (expected:$expectedVersion)"
             return $False
         }
     }
@@ -245,13 +241,13 @@ function Confirm-PowershellDetected($DetectionNode, $RunFolder)
 {
     $scriptBlock = $DetectionNode.scriptblock
     if ($null -eq $scriptBlock) {
-        Log -LogLevel Error -Line "Powershell detection node missing scriptblock"
+        Log -RunFolder $RunFolder -LogLevel Error -Line "Powershell detection node missing scriptblock"
         exit 1
     }
 
     $expected = $DetectionNode.expected
     if ($null -eq $expected) {
-        Log -LogLevel Error -Line "Powershell detection node missing expected"
+        Log -RunFolder $RunFolder -LogLevel Error -Line "Powershell detection node missing expected"
         exit 1
     }
 
@@ -266,7 +262,7 @@ function Confirm-IsDetected($XmlNode, $RunFolder)
         switch ($DetectionNode.LocalName) {
             "file"          { if (!(Confirm-FileDetected        -DetectionNode $DetectionNode -RunFolder $RunFolder)) {return $false} ; break}
             "powershell"    { if (!(Confirm-PowershellDetected  -DetectionNode $DetectionNode -RunFolder $RunFolder)) {return $false} ; break}
-            default  {Log -LogLevel Warn -Line "Unknown detection step in XML $($DetectionNode.LocalName)"; exit 1}
+            default  {Log -RunFolder $RunFolder -LogLevel Warn -Line "Unknown detection step in XML $($DetectionNode.LocalName)"; exit 1}
         }
     }
     return $True
@@ -294,37 +290,37 @@ function Install-Component($ComponentPath, $DetectOnly)
     $ComponentName = Split-Path -Path $ComponentPath -Leaf
 
     if (!(Test-Path -Path $ComponentPath)) {
-        Log -LogLevel Error  -Line "Failed to find $ComponentPath"
+        Log -RunFolder $RunFolder -LogLevel Error  -Line "Failed to find $ComponentPath"
         return "Fail"
     }
     $ComponentXMLPath = Join-Path -Path $ComponentPath -ChildPath "install.xml"
     if (!(Test-Path -Path $ComponentXMLPath)) {
-        Log -LogLevel Error  -Line "Failed to find $ComponentXMLPath"
+        Log -RunFolder $RunFolder -LogLevel Error  -Line "Failed to find $ComponentXMLPath"
         return "Fail"
     }
     [xml]$XmlDocument = Get-Content -Path $ComponentXMLPath
     if ($null -eq $XmlDocument) {
-        Log -LogLevel Error  -Line "Failed to find parse $ComponentXMLPath"
+        Log -RunFolder $RunFolder -LogLevel Error  -Line "Failed to find parse $ComponentXMLPath"
         return "Fail"
     }
 
     $PackageNode = $XmlDocument.package
     if ($null -eq $PackageNode) {
-        Log -LogLevel Error  -Line "Failed to find package node in $ComponentXMLPath"
+        Log -RunFolder $RunFolder -LogLevel Error  -Line "Failed to find package node in $ComponentXMLPath"
         return "Fail"
     }
 
     $RunFolder = Get-RunFolder -ComponentName $ComponentName
-    Log -LogLevel Info  -Line "Package:$ComponentName runfolder:$RunFolder"
+    Log -RunFolder $RunFolder -LogLevel Info  -Line "Package:$ComponentName runfolder:$RunFolder"
 
     $DetectionNode = $PackageNode.detect
     if ($null -ne $DetectionNode ) {
         if (Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder) {
-            Log -LogLevel Info  -Line "Package is detected:$ComponentName"
+            Log -RunFolder $RunFolder -LogLevel Info  -Line "Package is detected:$ComponentName"
             return "AlreadyInstalled"
         }
         if ($DetectOnly) {
-            Log -LogLevel Info  -Line "Package is not detected:$ComponentName"
+            Log -RunFolder $RunFolder -LogLevel Info  -Line "Package is not detected:$ComponentName"
             return "Fail"
         }
     }
@@ -338,7 +334,7 @@ function Install-Component($ComponentPath, $DetectOnly)
         Copy-FolderContents -SourcePath $FilesPath -DestinationPath $RunFolder
     }
 
-    Log -LogLevel Info  -Line "Installing package:$ComponentName"
+    Log -RunFolder $RunFolder -LogLevel Info  -Line "Installing package:$ComponentName"
 
     foreach ($StepNode in $PackageNode.steps.ChildNodes) {
         switch ($StepNode.LocalName) {
@@ -351,22 +347,23 @@ function Install-Component($ComponentPath, $DetectOnly)
             "powershell"   { if (!(Step-Powershell  -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             "unzip"        { if (!(Step-Unzip       -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
             "kill_process" { if (!(Step-KillProcess -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
-            default {Log -LogLevel Error -Line "Unknown step in XML $($StepNode.LocalName)"; break}
+            "wait_process" { if (!(Wait-Process     -XmlNode $StepNode -RunFolder $RunFolder)) {return "Fail"} ; break}
+            default {Log -RunFolder $RunFolder -LogLevel Error -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
 
     $RebootNode = $PackageNode.reboot
     if ($null -ne $RebootNode) {
-        Log -LogLevel Info  -Line "Reboot required $ComponentName"
+        Log -RunFolder $RunFolder -LogLevel Info  -Line "Reboot required $ComponentName"
         return "Reboot"
     }
 
     if ($null -ne $DetectionNode ) {
         if (!(Confirm-IsDetected -XmlNode $DetectionNode -RunFolder $RunFolder)) {
-            Log -LogLevel Error  -Line "Package is not detected after install $ComponentName"
+            Log -RunFolder $RunFolder -LogLevel Error  -Line "Package is not detected after install $ComponentName"
             return "Fail"
         }
-        Log -LogLevel Info  -Line "Post install package is detected $ComponentName"
+        Log -RunFolder $RunFolder -LogLevel Info  -Line "Post install package is detected $ComponentName"
     }
 
     return "Success"
