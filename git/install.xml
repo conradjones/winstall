@@ -2,7 +2,7 @@
 <package>
     <detect>
         <file>
-            <path>C:\bin\git\bin\git.exe</path>
+            <path>C:\Program Files\git\bin\git.exe</path>
             <version>2.24.0.2</version>
         </file>
     </detect>
@@ -12,7 +12,6 @@
             <commandline>Git-2.24.0.2-64-bit.exe</commandline>
             <args>
                 <arg>/LOG=GitInstaller.log</arg>
-                <arg>/DIR=C:\bin\git</arg>
                 <arg>/VERYSILENT</arg>
                 <arg>/NORESTART</arg>
                 <arg>/NOCANCEL</arg>
@@ -22,6 +21,6 @@
                 <arg>/COMPONENTS="icons,ext\reg\shellhere"</arg>
             </args>
         </command>
-        <path>C:\bin\git</path>
+        <path>C:\Program Files\git\bin</path>
     </steps>
 </package>
