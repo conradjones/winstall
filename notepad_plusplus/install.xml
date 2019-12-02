@@ -2,7 +2,7 @@
 <package>
     <detect>
         <file>
-            <path>"C:\Program Files\Notepad++\notepad++.exe"</path>
+            <path>C:\Program Files\Notepad++\notepad++.exe</path>
             <version>7.8.1.0</version>
         </file>
     </detect>
