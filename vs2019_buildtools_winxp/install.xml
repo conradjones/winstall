@@ -11,6 +11,7 @@
                 <arg>--norestart</arg>
             </args>
         </command>
+        <wait_process>vs_installershell</wait_process>
     </steps>
 </package>
 

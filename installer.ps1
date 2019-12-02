@@ -195,19 +195,20 @@ function Step-Unzip($XmlNode, $RunFolder)
 
 function Step-KillProcess($XmlNode, $RunFolder)
 {
-    Get-Process -Name $XmlNode | Stop-Process -Force -Verbose
+    Get-Process -Name $XmlNode.InnerText | Stop-Process -Force -Verbose
 
     return $True
 }
 
 function Step-WaitProcess($XmlNode, $RunFolder)
 {
-    $Process = @(Get-Process -Name $XmlNode)
+    $Process = @(Get-Process -Name $XmlNode.InnerText -ErrorAction SilentlyContinue)
 
     while ($Process.Count -gt 0) {
 
         Log -RunFolder $RunFolder -LogLevel Info -Line "Waiting for process:$XmlNode"
         Start-Sleep -Seconds 1
+        $Process = @(Get-Process -Name $XmlNode.InnerText -ErrorAction SilentlyContinue)
     }
 
     return $True
