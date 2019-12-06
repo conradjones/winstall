@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <parameters>
+        <JAVABIN>java</JAVABIN>
+        <WORKDIR>c:\jenkins_agent</WORKDIR>
+        <SECRET>PASS_VIA_SCRIPT</SECRET>
+        <AGENTID>PASS_VIA_SCRIPT</AGENTID>
+        <SERVERURL>PASS_VIA_SCRIPT</SERVERURL>
+    </parameters>
+    <detect>
+        <file>
+            <path>${WORKDIR}\jenkins-slave.exe</path>
+        </file>
+         <file>
+            <path>${WORKDIR}\jenkins-slave.xml</path>
+        </file>
+        <powershell>
+            <scriptblock>(Get-Service "jenkinsslave").Status</scriptblock>
+            <expected>Running</expected>
+        </powershell>
+    </detect>
+    <steps>
+        <create_dir>${WORKDIR}</create_dir>
+        <copy_file>
+            <source>jenkins-slave.exe</source>
+            <dest>${WORKDIR}\jenkins-slave.exe</dest>
+        </copy_file>
+        <copy_file>
+            <source>jenkins-slave.exe.config</source>
+            <dest>${WORKDIR}\jenkins-slave.exe.config</dest>
+        </copy_file>
+        <copy_file>
+            <source>slave.jar</source>
+            <dest>${WORKDIR}\slave.jar</dest>
+        </copy_file>
+        <configure_file>
+            <source>jenkins-slave.xml</source>
+            <dest>${WORKDIR}\jenkins-slave.xml</dest>
+        </configure_file>
+        <powershell>
+            <scriptblock>
+            New-Service -Name "jenkinsslave" -BinaryPathName "${WORKDIR}\jenkins-slave.exe" -DisplayName "Jenkins agent (jenkinsslave)" -StartupType Automatic
+            Get-Service "jenkinsslave" | Start-service
+            </scriptblock>
+        </powershell>
+    </steps>
+</package>
