@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <parameters>
+        <SERVER>10.10.10.10</SERVER>
+    </parameters>
+    <steps>
+        <command>
+            <commandline>cscript.exe</commandline>
+            <args>
+                <arg>c:\windows\system32\slmgr.vbs</arg>
+                <arg>/skms</arg>
+                <arg>${SERVER}</arg>
+            </args>
+        </command>
+    </steps>
+</package>
+
+
+
+
