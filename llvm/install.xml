@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>C:\bin\llvm\bin\clang-cl.exe</path>
+        </file>
+    </detect>
+    <steps>
+        <download>http://releases.llvm.org/9.0.0/LLVM-9.0.0-win64.exe</download>
+        <command>
+            <commandline>LLVM-9.0.0-win64.exe</commandline>
+            <args>
+                <arg>/S</arg>
+                <arg>/D=C:\bin\llvm</arg>
+            </args>
+        </command>
+        <path>C:\bin\llvm\bin</path>
+    </steps>
+</package>
