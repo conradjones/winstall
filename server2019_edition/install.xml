@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <parameters>
+        <KEY>N69G4-B89J2-4G8F4-WWYCC-J464C</KEY>
+        <EDITION>ServerStandard</EDITION>
+    </parameters>
+    <reboot/>
+    <steps>
+        <command>
+            <commandline>dism.exe</commandline>
+            <args>
+                <arg>/Online</arg>
+                <arg>/Set-Edition:${EDITION}</arg>
+                <arg>/ProductKey:${KEY}</arg>
+                <arg>/AcceptEula</arg>
+                <arg>/NoRestart</arg>
+                <arg>/Quiet</arg>
+            </args>
+            <exit_codes>
+                <exit_code>0</exit_code>
+                <exit_code>3010</exit_code>
+            </exit_codes>
+        </command>
+    </steps>
+</package>
+
+
+
+
