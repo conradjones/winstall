@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>C:\Bin\OpenJDK\bin\java.exe</path>
+        </file>
+    </detect>
+    <steps>
+        <download>https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.5%2B10/OpenJDK11U-jdk_x86-32_windows_hotspot_11.0.5_10.msi</download>
+        <command>
+            <commandline>msiexec</commandline>
+            <args>
+                <arg>/I</arg>
+                <arg>OpenJDK11U-jdk_x86-32_windows_hotspot_11.0.5_10.msi</arg>
+                <arg>/QN</arg>
+                <arg>INSTALLDIR=c:\bin\openjdk</arg>
+            </args>
+        </command>
+    </steps>
+</package>
