@@ -21,6 +21,10 @@
             </args>
         </command>
         <wait_process>vs_installershell</wait_process>
+        <env>
+            <name>VS_DIR</name>
+            <value>C:\Program Files (x86)\Microsoft Visual Studio\2019</value>
+        </env>
     </steps>
 </package>
 

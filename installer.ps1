@@ -267,6 +267,25 @@ function Step-WaitProcess($XmlNode, $RunFolder, $Parameters)
     return $True
 }
 
+function Step-EnvVar($XmlNode, $RunFolder, $Parameters)
+{
+    $Name = Get-ParsedNodeValue -Value $XmlNode.name -Parameters $Parameters
+    if ($Null -eq $Name) {
+       Log -RunFolder $RunFolder -LogLevel Error -Line "name node is missing from env step"
+       return $False
+    }
+
+    $Value = Get-ParsedNodeValue -Value $XmlNode.value -Parameters $Parameters
+    if ($Null -eq $Value) {
+       Log -RunFolder $RunFolder -LogLevel Error -Line "value node is missing from env step"
+       return $False
+    }
+
+    [System.Environment]::SetEnvironmentVariable($Name,$Value,[System.EnvironmentVariableTarget]::Machine)
+
+    return $True
+}
+
 function Confirm-FileDetected($DetectionNode, $RunFolder, $Parameters)
 {
     $path = Get-ParsedNodeValue -Value $DetectionNode.path -Parameters $Parameters
@@ -428,6 +447,7 @@ function Install-Component($ComponentPath, $DetectOnly, $Parameters)
             "unzip"          { if (!(Step-Unzip         -XmlNode $StepNode -RunFolder $RunFolder -Parameters $Parameters )) {return "Fail"} ; break}
             "kill_process"   { if (!(Step-KillProcess   -XmlNode $StepNode -RunFolder $RunFolder -Parameters $Parameters )) {return "Fail"} ; break}
             "wait_process"   { if (!(Step-WaitProcess   -XmlNode $StepNode -RunFolder $RunFolder -Parameters $Parameters )) {return "Fail"} ; break}
+            "env"            { if (!(Step-EnvVar   -XmlNode $StepNode -RunFolder $RunFolder -Parameters $Parameters )) {return "Fail"} ; break}
             default {Log -RunFolder $RunFolder -LogLevel Error -Line "Unknown step in XML $($StepNode.LocalName)"; break}
         }
     }
