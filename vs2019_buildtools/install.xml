@@ -25,6 +25,7 @@
             <name>VS_DIR</name>
             <value>C:\Program Files (x86)\Microsoft Visual Studio\2019</value>
         </env>
+        <path>C:\Program Files (x86)\Microsoft Visual Studio\Installer</path>
     </steps>
 </package>
 
