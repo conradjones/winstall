@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <parameters>
+        <VERSION>17763</VERSION>
+    </parameters>
+    <steps>
+        <download>https://download.visualstudio.microsoft.com/download/pr/e58a94db-93b0-4173-b26b-fc5f5c1bef7a/00720058e3b219a6260c17f5dc0042821298c764004bef0d968ab62bb3c9ce76/vs_BuildTools.exe</download>
+        <command>
+            <commandline>vs_BuildTools.exe</commandline>
+            <args>
+                <arg>--add</arg>
+                <arg>Microsoft.VisualStudio.Component.Windows10SDK.${VERSION}</arg>
+                <arg>--quiet</arg>
+                <arg>--norestart</arg>
+            </args>
+        </command>
+        <wait_process>vs_installershell</wait_process>
+    </steps>
+</package>
+
+
+
+
