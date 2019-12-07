@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>c:\bin\ninja.exe</path>
+        </file>
+    </detect>
+    <steps>
+        <download>https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip</download>
+        <create_dir>c:\bin</create_dir>
+        <unzip>
+            <zipfile>c:\.winstall\install\ninja\ninja-win.zip</zipfile>
+            <destination>c:\bin</destination>
+        </unzip>
+        <path>c:\bin</path>
+    </steps>
+</package>
