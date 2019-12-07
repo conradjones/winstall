@@ -25,6 +25,23 @@ while (!($process.HasExited)) {
 }
             </scriptblock>
         </powershell>
+        <command>
+            <commandline>c:\msys64\usr\bin\pacman.exe</commandline>
+            <args>
+                <arg>-Sy</arg>
+                <arg>--noconfirm</arg>
+                <arg>make</arg>
+            </args>
+        </command>
+        <command>
+            <commandline>c:\msys64\usr\bin\pacman.exe</commandline>
+            <args>
+                <arg>-Sy</arg>
+                <arg>--noconfirm</arg>
+                <arg>mingw-w64-x86_64-make</arg>
+            </args>
+        </command>
         <path>C:\msys64\usr\bin</path>
+        <path>C:\msys64\mingw64\bin</path>
     </steps>
 </package>
