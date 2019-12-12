@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <parameters>
+        <EDITION>professional</EDITION>
+        <VERSION>2019.3</VERSION>
+    </parameters>
+    <steps>
+        <download>https://download.jetbrains.com/cpp/Clion-${VERSION}.exe</download>
+        <command>
+            <commandline>Clion-${VERSION}.exe</commandline>
+            <args>
+                <arg>/S</arg>
+                <arg>/CONFIG=silent.config</arg>
+            </args>
+        </command>
+    </steps>
+</package>
