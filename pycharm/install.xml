@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <download>https://www.syntevo.com/downloads/smartgit/smartgit-win-19_1_5.zip</download>
+        <unzip>
+            <zipfile>c:\.winstall\install\smartgit\smartgit-win-19_1_5.zip</zipfile>
+            <destination>c:\.winstall\install\smartgit</destination>
+        </unzip>
+        <command>
+            <commandline>smartgit-19_1_5-setup.exe</commandline>
+            <args>
+                <arg>/SILENT</arg>
+                <arg>/SUPPRESSMSGBOXES</arg>
+                <arg>/NORESTART</arg>
+                <arg>/SP-</arg>
+            </args>
+        </command>
+    </steps>
+</package>
