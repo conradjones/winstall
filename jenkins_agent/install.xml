@@ -15,7 +15,7 @@
             <path>${WORKDIR}\jenkins-slave.xml</path>
         </file>
         <powershell>
-            <scriptblock>(Get-Service "jenkinsslave").Status</scriptblock>
+            <scriptblock>(Get-Service "jenkinsslave" -ErrorAction SilentlyContinue).Status</scriptblock>
             <expected>Running</expected>
         </powershell>
     </detect>
@@ -39,8 +39,13 @@
         </configure_file>
         <powershell>
             <scriptblock>
-            New-Service -Name "jenkinsslave" -BinaryPathName "${WORKDIR}\jenkins-slave.exe" -DisplayName "Jenkins agent (jenkinsslave)" -StartupType Automatic
-            Get-Service "jenkinsslave" | Start-service
+                Import-Module Carbon
+                $Password = ConvertTo-SecureString "${SERVICE_PASSWORD}" -AsPlainText -Force
+                New-LocalUser "${SERVICE_USER}" -Password $Password -FullName "Jenkins user"
+                Grant-Privilege -Identity "${SERVICE_USER}" -Privilege SeServiceLogonRight
+                $Creds = New-Object System.Management.Automation.PSCredential (".\${SERVICE_USER}", $Password)
+                New-Service -Name "jenkinsslave" -BinaryPathName "${WORKDIR}\jenkins-slave.exe" -DisplayName "Jenkins agent (jenkinsslave)" -StartupType Automatic -credential $Creds
+                Get-Service "jenkinsslave" | Start-service
             </scriptblock>
         </powershell>
     </steps>
