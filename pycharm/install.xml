@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <parameters>
+        <EDITION>professional</EDITION>
+        <VERSION>2019.3</VERSION>
+    </parameters>
     <steps>
-        <download>https://www.syntevo.com/downloads/smartgit/smartgit-win-19_1_5.zip</download>
-        <unzip>
-            <zipfile>c:\.winstall\install\smartgit\smartgit-win-19_1_5.zip</zipfile>
-            <destination>c:\.winstall\install\smartgit</destination>
-        </unzip>
+        <download>https://download.jetbrains.com/python/pycharm-${EDITION}-${VERSION}.exe</download>
         <command>
-            <commandline>smartgit-19_1_5-setup.exe</commandline>
+            <commandline>pycharm-${EDITION}-${VERSION}.exe</commandline>
             <args>
-                <arg>/SILENT</arg>
-                <arg>/SUPPRESSMSGBOXES</arg>
-                <arg>/NORESTART</arg>
-                <arg>/SP-</arg>
+                <arg>/S</arg>
+                <arg>/CONFIG=silent.config</arg>
             </args>
         </command>
     </steps>
