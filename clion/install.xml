@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
     <parameters>
-        <EDITION>professional</EDITION>
-        <VERSION>2019.3</VERSION>
+        <VERSION>2019.3.1</VERSION>
     </parameters>
     <steps>
-        <download>https://download.jetbrains.com/cpp/Clion-${VERSION}.exe</download>
+        <download>https://download-cf.jetbrains.com/cpp/CLion-${VERSION}.exe</download>
         <command>
             <commandline>Clion-${VERSION}.exe</commandline>
             <args>
