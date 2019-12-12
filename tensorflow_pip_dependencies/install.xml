@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+	<steps>
+		<command>
+			<commandline>C:\bin\Python37\Scripts\Pip3</commandline>
+			<args>
+				<arg>install</arg>
+				<arg>six</arg>
+				<arg>numpy</arg>
+				<arg>wheel</arg>
+			</args>
+		</command>
+		<command>
+			<commandline>C:\bin\Python37\Scripts\Pip3</commandline>
+			<args>
+                <arg>install</arg>
+                <arg>keras_applications==1.0.6</arg>
+                <arg>--no-deps</arg>
+            </args>
+		</command>
+		<command>
+			<commandline>C:\bin\Python37\Scripts\Pip3</commandline>
+			<args>
+                <arg>install</arg>
+                <arg>keras_preprocessing==1.0.5</arg>
+                <arg>--no-deps</arg>
+            </args>
+		</command>
+	</steps>
+</package>
