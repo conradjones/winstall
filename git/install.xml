@@ -18,9 +18,9 @@
                 <arg>/SP-</arg>
                 <arg>/CLOSEAPPLICATIONS</arg>
                 <arg>/RESTARTAPPLICATIONS</arg>
-                <arg>/COMPONENTS="icons,ext\reg\shellhere"</arg>
+                <arg>/LOADINF=silent.inf</arg>
             </args>
         </command>
-        <path>C:\Program Files\git\bin</path>
+        <path>C:\Program Files\git\cmd</path>
     </steps>
 </package>
