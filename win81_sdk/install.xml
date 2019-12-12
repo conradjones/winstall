@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <download>http://download.microsoft.com/download/B/0/C/B0C80BA3-8AD6-4958-810B-6882485230B5/standalonesdk/sdksetup.exe</download>
+        <command>
+            <commandline>sdksetup.exe</commandline>
+            <args>
+                <arg>/features</arg>
+                <arg>+</arg>
+                <arg>/quiet</arg>
+            </args>
+        </command>
+    </steps>
+</package>
+
+
+
+
