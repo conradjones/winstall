@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+	<steps>
+		<command>
+			<commandline>C:\bin\Python37\Scripts\Pip3</commandline>
+			<args>
+				<arg>install</arg>
+				<arg>libsass</arg>
+				<arg>watchdog</arg>
+				<arg>observer</arg>
+			</args>
+		</command>
+	</steps>
+</package>
