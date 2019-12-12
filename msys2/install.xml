@@ -38,6 +38,14 @@ while (!($process.HasExited)) {
             <args>
                 <arg>-Sy</arg>
                 <arg>--noconfirm</arg>
+                <arg>patch</arg>
+            </args>
+        </command>
+        <command>
+            <commandline>c:\msys64\usr\bin\pacman.exe</commandline>
+            <args>
+                <arg>-Sy</arg>
+                <arg>--noconfirm</arg>
                 <arg>mingw-w64-x86_64-make</arg>
             </args>
         </command>
