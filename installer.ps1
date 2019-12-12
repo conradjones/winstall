@@ -85,8 +85,8 @@ function Step-CreateDir($XmlNode, $RunFolder, $Parameters)
 
 function Step-CopyFile($XmlNode, $RunFolder, $Parameters)
 {
-    $SourceNode = Get-ParsedNodeValue -Value $XmlNode.source -Parameters $Parameters
-    if ($Null -eq $SourceNode) {
+    $SourcePath = Get-ParsedNodeValue -Value $XmlNode.source -Parameters $Parameters
+    if ($Null -eq $SourcePath) {
        Log -RunFolder $RunFolder -LogLevel Error -Line "source node is missing from copy_file step"
        return $False
     }
@@ -96,8 +96,10 @@ function Step-CopyFile($XmlNode, $RunFolder, $Parameters)
        Log -RunFolder $RunFolder -LogLevel Error -Line "dest node is missing from copy_file step"
        return $False
     }
-
-    $SourcePath = Join-Path -Path $RunFolder -ChildPath $SourceNode
+    if (!([System.IO.Path]::IsPathRooted($SourcePath)))
+    {
+        $SourcePath = Join-Path -Path $RunFolder -ChildPath $SourcePath
+    }
     $DestPath = $DestNode
     Copy-Item -Path $SourcePath -Destination $DestPath
     if (!(Test-Path -Path $DestPath)) {
@@ -214,7 +216,7 @@ function Step-RegSet($XmlNode, $RunFolder, $Parameters)
 function Step-Powershell($XmlNode, $RunFolder, $Parameters)
 {
     $scriptBlock = Get-ParsedNodeValue -Value $XmlNode.scriptblock -Parameters $Parameters
-
+    $scriptBlock | Write-Output -Verbose
     if ($null -eq $scriptBlock) {
         Log -RunFolder $RunFolder -LogLevel Error -Line "scriptblock node is missing from powershell step"
         exit 1
@@ -239,7 +241,7 @@ function Step-Unzip($XmlNode, $RunFolder, $Parameters)
         exit 1
     }
 
-    Expand-Archive -Path $zipfile -Destination $destination -Verbose
+    Expand-Archive -Path $zipfile -Destination $destination -Verbose -Force
 
     return $True
 }
@@ -259,7 +261,7 @@ function Step-WaitProcess($XmlNode, $RunFolder, $Parameters)
 
     while ($Process.Count -gt 0) {
 
-        Log -RunFolder $RunFolder -LogLevel Info -Line "Waiting for process:$XmlNode"
+        Log -RunFolder $RunFolder -LogLevel Info -Line "Waiting for process:$process_name"
         Start-Sleep -Seconds 1
         $Process = @(Get-Process -Name $process_name -ErrorAction SilentlyContinue)
     }
