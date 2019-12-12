@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <powershell>
+            <scriptblock>Import-Module "${MODULENAME}" -ErrorAction SilentlyContinue; @(Get-Module | Where { $_.name -eq "${MODULENAME}" }).Count</scriptblock>
+            <expected>1</expected>
+        </powershell>
+    </detect>
+    <steps>
+        <powershell>
+            <scriptblock>
+               Install-Module -Name "${MODULENAME}" -Force -Verbose
+            </scriptblock>
+        </powershell>
+    </steps>
+</package>
