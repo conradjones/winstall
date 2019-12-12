@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <powershell>
+            <scriptblock>@(Get-PackageProvider | Where { $_.name -eq "nuget" }).Count</scriptblock>
+            <expected>1</expected>
+        </powershell>
+    </detect>
+    <steps>
+        <powershell>
+            <scriptblock>
+               Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+            </scriptblock>
+        </powershell>
+    </steps>
+</package>
