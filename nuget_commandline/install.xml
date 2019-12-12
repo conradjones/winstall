@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>c:\bin\nuget.exe</path>
+        </file>
+    </detect>
+    <steps>
+        <download>https://dist.nuget.org/win-x86-commandline/latest/nuget.exe</download>
+        <create_dir>c:\bin</create_dir>
+        <copy_file>
+            <source>nuget.exe</source>
+            <dest>c:\bin\nuget.exe</dest>
+        </copy_file>
+        <path>c:\bin</path>
+    </steps>
+</package>
