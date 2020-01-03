@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>c:\bin\procmon.exe</path>
+        </file>
+    </detect>
+    <steps>
+        <download>https://download.sysinternals.com/files/ProcessMonitor.zip</download>
+        <create_dir>c:\bin</create_dir>
+        <unzip>
+            <zipfile>c:\.winstall\install\sysinternals_processmonitor\ProcessMonitor.zip</zipfile>
+            <destination>c:\bin</destination>
+        </unzip>
+        <path>c:\bin</path>
+    </steps>
+</package>
