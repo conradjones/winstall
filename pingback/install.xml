@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
+    <detect>
+        <file>
+            <path>C:\bin\pingback\pingback.py</path>
+        </file>
+    </detect>
     <steps>
-        <download><![CDATA[https://download.microsoft.com/download/4/2/2/42245968-6A79-4DA7-A5FB-08C0AD0AE661/windowssdk/winsdksetup.exe]]></download>
         <command>
-            <commandline>winsdksetup.exe</commandline>
-            <args>
-                <arg>/features</arg>
-                <arg>OptionId.MSIInstallTools</arg>
-                <arg>/layout</arg>
-                <arg>c:\.winstall\install\orca</arg>
-                <arg>/quiet</arg>
-            </args>
-        </command>
-        <command>
-            <commandline>msiexec.exe</commandline>
-            <args>
-                <arg>/I</arg>
-                <arg>c:\.winstall\install\orca\Installers\Orca-x86_en-us.msi</arg>
-                <arg>/qn</arg>
-            </args>
-        </command>
+			<commandline>C:\bin\Python37\Scripts\Pip3</commandline>
+			<args>
+				<arg>install</arg>
+				<arg>getmac</arg>
+				<arg>flask</arg>
+				<arg>requests</arg>
+			</args>
+		</command>
+        <create_dir>c:\bin\pingback</create_dir>
+        <copy_file>
+            <source>pingback.py</source>
+            <dest>C:\bin\pingback\pingback.py</dest>
+        </copy_file>
+        <powershell>
+            <scriptblock>$taskAction = New-ScheduledTaskAction -Execute 'C:\bin\Python37\python.exe' -Argument 'C:\bin\pingback\pingback.py'; $taskTrigger = New-ScheduledTaskTrigger -AtStartup; $taskUserPrincipal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' ; $taskSettings = New-ScheduledTaskSettingsSet -Compatibility Win8  ; $task = New-ScheduledTask -Action $taskAction -Principal $taskUserPrincipal -Trigger $taskTrigger -Settings $taskSettings ; Register-ScheduledTask -TaskName 'Pingback' -InputObject $task -Force</scriptblock>
+        </powershell>
     </steps>
 </package>
