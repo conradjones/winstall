@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>c:\bin\ccache.exe</path>
+        </file>
+        <file>
+            <path>c:\bin\zlib1.dll</path>
+        </file>
+        <file>
+            <path>c:\bin\ccache-cl.cmd</path>
+        </file>
+    </detect>
+    <steps>
+        <create_dir>c:\bin</create_dir>
+        <copy_file>
+            <source>ccache.exe</source>
+            <dest>c:\bin\ccache.exe</dest>
+        </copy_file>
+        <copy_file>
+            <source>ccache-cl.cmd</source>
+            <dest>c:\bin\ccache-cl.cmd</dest>
+        </copy_file>
+        <copy_file>
+            <source>zlib1.dll</source>
+            <dest>c:\bin\zlib1.dll</dest>
+        </copy_file>
+        <path>c:\bin</path>
+    </steps>
+</package>
+
