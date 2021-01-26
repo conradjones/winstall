@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>c:\bin\sccache.exe</path>
+        </file>
+        <file>
+            <path>c:\bin\cache-cl.cmd</path>
+        </file>
+    </detect>
+    <steps>
+        <create_dir>c:\bin</create_dir>
+        <copy_file>
+            <source>sccache.exe</source>
+            <dest>c:\bin\sccache.exe</dest>
+        </copy_file>
+        <copy_file>
+            <source>cache-cl.cmd</source>
+            <dest>c:\bin\cache-cl.cmd</dest>
+        </copy_file>
+        <copy_file>
+            <source>libcrypto-1_1-x64.dll</source>
+            <dest>c:\bin\libcrypto-1_1-x64.dll</dest>
+        </copy_file>
+        <copy_file>
+            <source>libssl-1_1-x64.dll</source>
+            <dest>c:\bin\libssl-1_1-x64.dll</dest>
+        </copy_file>
+        <path>c:\bin</path>
+    </steps>
+</package>
+

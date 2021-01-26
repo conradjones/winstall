@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>c:\bin\winflexbison\bison.exe</path>
+        </file>
+    </detect>
+    <steps>
+        <download>https://github.com/lexxmark/winflexbison/releases/download/v2.5.20/win_flex_bison-2.5.20.zip</download>
+        <create_dir>c:\bin\winflexbison</create_dir>
+        <unzip>
+            <zipfile>c:\.winstall\install\winflexbison\win_flex_bison-2.5.20.zip</zipfile>
+            <destination>c:\bin\winflexbison</destination>
+        </unzip>
+        <copy_file>
+            <source>c:\bin\winflexbison\win_bison.exe</source>
+            <dest>c:\bin\winflexbison\bison.exe</dest>
+        </copy_file>
+        <copy_file>
+            <source>c:\bin\winflexbison\win_flex.exe</source>
+            <dest>c:\bin\winflexbison\flex.exe</dest>
+        </copy_file>
+        <path>c:\bin\winflexbison</path>
+    </steps>
+</package>

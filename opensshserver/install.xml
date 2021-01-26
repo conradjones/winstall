@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <powershell>
+            <scriptblock>(Get-WindowsCapability -Online | ? Name -like 'OpenSSHServer').State</scriptblock>
+            <expected>Present</expected>
+        </powershell>
+    </detect>
+    <steps>
+        <powershell>
+            <scriptblock>
+               Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+            </scriptblock>
+        </powershell>
+    </steps>
+</package>

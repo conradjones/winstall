@@ -1,0 +1,1 @@
+ccache.exe clang-cl.exe %*

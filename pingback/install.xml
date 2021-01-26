@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <steps>
+        <download><![CDATA[https://download.microsoft.com/download/4/2/2/42245968-6A79-4DA7-A5FB-08C0AD0AE661/windowssdk/winsdksetup.exe]]></download>
+        <command>
+            <commandline>winsdksetup.exe</commandline>
+            <args>
+                <arg>/features</arg>
+                <arg>OptionId.MSIInstallTools</arg>
+                <arg>/layout</arg>
+                <arg>c:\.winstall\install\orca</arg>
+                <arg>/quiet</arg>
+            </args>
+        </command>
+        <command>
+            <commandline>msiexec.exe</commandline>
+            <args>
+                <arg>/I</arg>
+                <arg>c:\.winstall\install\orca\Installers\Orca-x86_en-us.msi</arg>
+                <arg>/qn</arg>
+            </args>
+        </command>
+    </steps>
+</package>
