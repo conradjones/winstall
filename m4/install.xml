@@ -2,14 +2,14 @@
 <package>
     <detect>
         <file>
-            <path>c:\bin\autoconf</path>
+            <path>c:\bin\m4.exe</path>
         </file>
     </detect>
     <steps>
-        <download>http://downloads.sourceforge.net/gnuwin32/autoconf-2.63-bin.zip</download>
+        <download>http://downloads.sourceforge.net/gnuwin32/m4-1.4.14-1-bin.zip</download>
         <create_dir>c:\bin</create_dir>
         <unzip>
-            <zipfile>c:\.winstall\install\autoconf\autoconf-2.63-bin.zip</zipfile>
+            <zipfile>c:\.winstall\install\m4\m4-1.4.14-1-bin.zip</zipfile>
             <destination>c:\</destination>
         </unzip>
         <path>c:\bin</path>
