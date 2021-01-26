@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+    <detect>
+        <file>
+            <path>c:\bin\mc.exe</path>
+        </file>
+    </detect>
+    <steps>
+        <create_dir>c:\bin</create_dir>
+        <download>https://dl.min.io/client/mc/release/windows-amd64/mc.exe</download>
+        <copy_file>
+            <source>mc.exe</source>
+            <dest>c:\bin\mc.exe</dest>
+        </copy_file>
+        <path>c:\bin</path>
+    </steps>
+</package>
+
