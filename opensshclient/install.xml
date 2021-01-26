@@ -2,14 +2,14 @@
 <package>
     <detect>
         <powershell>
-            <scriptblock>(Get-WindowsCapability -Online | ? Name -like 'OpenSSHServer').State</scriptblock>
+            <scriptblock>(Get-WindowsCapability -Online | ? Name -like 'OpenSSHClient').State</scriptblock>
             <expected>Present</expected>
         </powershell>
     </detect>
     <steps>
         <powershell>
             <scriptblock>
-               Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+               Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
             </scriptblock>
         </powershell>
     </steps>
