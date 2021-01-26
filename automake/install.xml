@@ -2,16 +2,16 @@
 <package>
     <detect>
         <file>
-            <path>c:\bin\m4.exe</path>
+            <path>c:\bin\automake\bin\automake</path>
         </file>
     </detect>
     <steps>
-        <download>http://downloads.sourceforge.net/gnuwin32/m4-1.4.14-1-bin.zip</download>
-        <create_dir>c:\bin</create_dir>
+        <download>https://netix.dl.sourceforge.net/project/gnuwin32/automake/1.9.4/automake-1.9.4-bin.zip</download>
+        <create_dir>c:\bin\automake</create_dir>
         <unzip>
-            <zipfile>c:\.winstall\install\m4\m4-1.4.14-1-bin.zip</zipfile>
-            <destination>c:\</destination>
+            <zipfile>c:\.winstall\install\automake\automake-1.9.4-bin.zip</zipfile>
+            <destination>c:\bin\automake</destination>
         </unzip>
-        <path>c:\bin</path>
+        <path>c:\bin\automake\bin</path>
     </steps>
 </package>
