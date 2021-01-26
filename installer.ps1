@@ -227,6 +227,8 @@ function Step-Powershell($XmlNode, $RunFolder, $Parameters)
     return $True
 }
 
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
 function Step-Unzip($XmlNode, $RunFolder, $Parameters)
 {
     $zipfile = Get-ParsedNodeValue -Value $XmlNode.zipfile -Parameters $Parameters
@@ -241,7 +243,10 @@ function Step-Unzip($XmlNode, $RunFolder, $Parameters)
         exit 1
     }
 
-    Expand-Archive -Path $zipfile -Destination $destination -Verbose -Force
+
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $destination)
+
+    #Expand-Archive -Path $zipfile -Destination $destination -Verbose -Force
 
     return $True
 }
