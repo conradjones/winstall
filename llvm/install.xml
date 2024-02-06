@@ -6,9 +6,9 @@
         </file>
     </detect>
     <steps>
-        <download>https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/LLVM-11.0.0-win64.exe</download>
+        <download>https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/LLVM-17.0.6-win64.exe</download>
         <command>
-            <commandline>LLVM-11.0.0-win64.exe</commandline>
+            <commandline>LLVM-17.0.6-win64.exe</commandline>
             <args>
                 <arg>/S</arg>
                 <arg>/D=C:\bin\llvm</arg>
