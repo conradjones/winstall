@@ -2,12 +2,12 @@
 <package>
     <detect>
         <file>
-            <path>C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.28.29333\bin\Hostx64\x64\cl.exe</path>
-            <version>14.28.29336.0</version>
+            <path>C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x64\cl.exe</path>
+            <version>19.38.33135.0</version>
         </file>
     </detect>
     <steps>
-        <download>https://download.visualstudio.microsoft.com/download/pr/e58a94db-93b0-4173-b26b-fc5f5c1bef7a/00720058e3b219a6260c17f5dc0042821298c764004bef0d968ab62bb3c9ce76/vs_BuildTools.exe</download>
+        <download>https://download.visualstudio.microsoft.com/download/pr/5bebe58c-9308-4a5b-9696-b6f84e90a32e/d62702bf9e2bb2c8be1f85ec4b86e0426e42646d12ac5196c451574d22be148e/vs_BuildTools.exe</download>
         <command>
             <commandline>vs_BuildTools.exe</commandline>
             <args>
@@ -23,7 +23,7 @@
         <wait_process>vs_installershell</wait_process>
         <env>
             <name>VS_DIR</name>
-            <value>C:\Program Files (x86)\Microsoft Visual Studio\2019</value>
+            <value>C:\Program Files (x86)\Microsoft Visual Studio\2022</value>
         </env>
         <path>C:\Program Files (x86)\Microsoft Visual Studio\Installer</path>
     </steps>
