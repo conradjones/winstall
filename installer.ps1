@@ -2,7 +2,7 @@ param(  [Parameter(Mandatory=$true)][String]$ComponentPath,
         $Parameters,
         [switch] $DetectOnly)
 
-$ErrorActionPreference = “Stop”
+$ErrorActionPreference = "Stop"
 
 enum LogLevel
 {
@@ -163,6 +163,7 @@ function Step-Path($XmlNode, $RunFolder, $Parameters)
 
 function Step-Command($XmlNode, $RunFolder, $Parameters)
 {
+
     Push-Location -Path $RunFolder
     $command = Get-ParsedNodeValue -Value $XmlNode.commandLine -Parameters $Parameters
     $args = @()
@@ -170,10 +171,9 @@ function Step-Command($XmlNode, $RunFolder, $Parameters)
         $args += Get-ParsedNodeValue -Value $ArgNode -Parameters $Parameters
     }
     $argString = $args -join " "
-    Log -RunFolder $RunFolder -LogLevel Info -Line "Executing:$command $argString"
-    $process = (Start-Process –PassThru -FilePath $command -ArgumentList $args -Wait)
+    Log -RunFolder $RunFolder -LogLevel Info -Line "Executing:$command $($argString)"
+    $process = Start-Process -FilePath "$($command)" -ArgumentList $args -Wait
     Pop-Location
-
     $process_exit_code = $process.ExitCode
 
     $exit_codes = $XmlNode.exit_codes
