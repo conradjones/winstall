@@ -3,7 +3,7 @@
     <detect>
         <file>
             <path>C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x64\cl.exe</path>
-            <version>19.38.33135.0</version>
+            <version>14.38.33135.0</version>
         </file>
     </detect>
     <steps>
