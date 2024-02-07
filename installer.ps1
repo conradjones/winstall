@@ -1,5 +1,5 @@
 param(  [Parameter(Mandatory=$true)][String]$ComponentPath,
-        $Parameters,
+        $Parameters = @{},
         [switch] $DetectOnly)
 
 $ErrorActionPreference = "Stop"
@@ -406,7 +406,6 @@ function Install-Component($ComponentPath, $DetectOnly, $Parameters)
     $RunFolder = Get-RunFolder -ComponentName $ComponentName
     Log -RunFolder $RunFolder -LogLevel Info  -Line "Package:$ComponentName runfolder:$RunFolder"
 
-
     $ParametersNode = $PackageNode.parameters
     if ($null -ne $ParametersNode) {
         foreach ($ParameterNode in $ParametersNode.ChildNodes) {
@@ -416,7 +415,6 @@ function Install-Component($ComponentPath, $DetectOnly, $Parameters)
             }
         }
     }
-
 
     $DetectionNode = $PackageNode.detect
     if ($null -ne $DetectionNode ) {
