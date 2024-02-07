@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package>
     <parameters>
-        <VERSION>17763</VERSION>
+        <VERSION>20348</VERSION>
     </parameters>
     <steps>
-        <download>https://download.visualstudio.microsoft.com/download/pr/e58a94db-93b0-4173-b26b-fc5f5c1bef7a/00720058e3b219a6260c17f5dc0042821298c764004bef0d968ab62bb3c9ce76/vs_BuildTools.exe</download>
+        <download>https://download.visualstudio.microsoft.com/download/pr/5bebe58c-9308-4a5b-9696-b6f84e90a32e/d62702bf9e2bb2c8be1f85ec4b86e0426e42646d12ac5196c451574d22be148e/vs_BuildTools.exe</download>
         <command>
             <commandline>vs_BuildTools.exe</commandline>
             <args>
