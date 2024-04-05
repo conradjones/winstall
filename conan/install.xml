@@ -3,13 +3,13 @@
     <detect>
         <file>
             <path>C:\bin\conan\conan\conan.exe</path>
-            <version>1.20.4.0</version>
+            <version>2.2.2.0</version>
         </file>
     </detect>
     <steps>
-        <download>https://dl.bintray.com/conan/installers/conan-win-64_1_20_4.exe</download>
+        <download>https://github.com/conan-io/conan/releases/download/2.2.2/conan-2.2.2-windows-x86_64-installer.exe</download>
         <command>
-            <commandline>conan-win-64_1_20_4.exe</commandline>
+            <commandline>conan-2.2.2-windows-x86_64-installer.exe</commandline>
             <args>
                 <arg>/DIR=C:\bin\conan</arg>
                 <arg>/VERYSILENT</arg>
