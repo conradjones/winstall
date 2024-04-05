@@ -2,25 +2,25 @@
 <package>
     <detect>
         <file>
-            <path>C:\bin\Python37\python.exe</path>
-            <version>3.7.5150.1013</version>
+            <path>C:\bin\Python312\python.exe</path>
+            <version>3.12.2150.1013</version>
         </file>
         <file>
-            <path>C:\bin\Python37\scripts\pip.exe</path>
+            <path>C:\bin\Python312\scripts\pip.exe</path>
         </file>
     </detect>
     <steps>
-        <download>https://www.python.org/ftp/python/3.7.5/python-3.7.5-amd64.exe</download>
+        <download>https://www.python.org/ftp/python/3.12.2/python-3.12.2.exe</download>
         <command>
-            <commandline>python-3.7.5-amd64.exe</commandline>
+            <commandline>python-3.12.2.exe</commandline>
             <args>
                 <arg>/passive</arg>
                 <arg>/quiet</arg>
                 <arg>InstallAllUsers=1</arg>
-                <arg>TargetDir=C:\bin\Python37</arg>
+                <arg>TargetDir=C:\bin\Python312</arg>
             </args>
         </command>
-        <path>C:\bin\Python37</path>
-        <path>C:\bin\Python37\Scripts</path>
+        <path>C:\bin\Python312</path>
+        <path>C:\bin\Python312\Scripts</path>
     </steps>
 </package>
